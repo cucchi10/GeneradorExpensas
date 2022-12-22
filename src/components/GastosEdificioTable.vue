@@ -25,7 +25,8 @@ defineProps({
       <tbody>
         <tr v-if="edificio.pretencion_fondo !== 0 && edificio.pretencion_fondo > edificio.saldo_anterior_fondo_edificio">
           <th scope="row">Fondo Reserva</th>
-          <td>{{ `Faltante para llegar a $  ${edificio.pretencion_fondo.toFixed(2)}` }}</td>
+          <td>{{ `Saldo Anterior de Reserva $ ${edificio.saldo_anterior_fondo_edificio.toFixed(2)}. 
+          Faltante para llegar a $  ${edificio.pretencion_fondo.toFixed(2)}` }}</td>
           <td>{{`$ ${edificio.dif_saldo_pretencion_fondo_edificio.toFixed(2)}`}}</td>
         </tr>
         <tr v-if="cochera.gastos_arba_cocheras !== 0">

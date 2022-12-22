@@ -138,7 +138,8 @@ const {datos_session} = useStrorage()
       descriptionExtraordinarias="Detalle por Extraordinarias"
       :extraordinarias="otras_extraordinarias.reduce((acc,value)=>{
       return acc+=value.otra_extraordinaria
-    }, 0)"/>
+    }, 0)"
+      descriptionSaldoReserva="Saldo Anterior de Reserva" :saldoReserva="edificio.saldo_anterior_fondo_edificio"/>
       <depto-info-extra-vue :show_depto_info_extra="show_depto_info_extra" :cochera="cochera" :extraordinarias="otras_extraordinarias.reduce((acc,value)=>{
       return acc+=value.otra_extraordinaria
     }, 0)"/>

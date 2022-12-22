@@ -10,6 +10,10 @@
     </thead>
     <tbody>
       <tr>
+        <th scope="row">{{ descriptionSaldoReserva }}</th>
+        <td>{{ `$ ${saldoReserva.toFixed(2)}` }}</td>
+      </tr>
+      <tr>
         <th scope="row">{{ descriptionExtraordinarias }}</th>
         <td>{{ `$ ${extraordinarias.toFixed(2)}` }}</td>
       </tr>
@@ -50,7 +54,9 @@ defineProps({
   descriptionPagos: String,
   pagos: Number,
   descriptionExtraordinarias: String,
-  extraordinarias: Number
+  extraordinarias: Number,
+  descriptionSaldoReserva:String,
+  saldoReserva:Number,
 })
 </script>
 
