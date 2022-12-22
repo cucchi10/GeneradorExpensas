@@ -1,0 +1,57 @@
+@import "../node_modules/bootstrap/scss/bootstrap";
+
+@media(prefers-color-scheme: dark){
+  :root{
+    --bg-color: #444;
+    --bg-color-more: #111;
+    --text-color: #ccc;
+    --header-color: #1B233D;
+    --footer-color: #131211;
+    .table-results *, .table-headers *{
+    background-color: var(--bg-color-more);
+    color: #E8CEB8;
+    }
+    .table{
+      --bs-table-striped-color: #fff;
+      --bs-table-striped-bg: rgba(0, 0, 0, 0.3);
+    }
+    caption{
+      color: #bbb;
+    }
+    .class-pdf *{
+       background-color: transparent !important;
+        color: black !important;
+        .table-results *, .table-headers *{
+            background-color: #777 !important;
+        }
+    }
+  } 
+}
+
+@media(prefers-color-scheme: light){
+  :root{
+    --bg-color: #ccc;
+    --bg-color-more: #bbb;
+    --text-color: #333;
+    --header-color: #A09B95;
+    --footer-color: #97938C;
+    --bs-body-color: #212529;
+    .class-pdf *{
+      background-color: transparent !important;
+      color: black !important;
+      .table-results *, .table-headers *{
+          background-color: #777;
+      }
+    }
+  }
+}
+
+*{
+  color: var(--text-color);
+  font-family: system-ui;
+}
+
+body, .dark{
+  background-color: var(--bg-color);
+}
+
