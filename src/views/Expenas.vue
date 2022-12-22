@@ -108,13 +108,13 @@ const {datos_session} = useStrorage()
         :deptos="deptos"
         :resultados="resultados"
       />
+      <div class="html2pdf__page-break"></div>
       <table-saldo-cierre-vue descriptionFinal="Saldo al cierre de Caja" :saldoFinal="edificio.saldo_al_cierre"
         descriptionSaldosFavores="Suma de Saldos a Favores de los Departamentos" :saldosFavores="Object.values(deptos).reduce((acc,value)=>{
       return acc+=value.new_saldo_favor
     }, 0)"
       descriptionARecaudar="Saldo a recaudar Por Pagos" :saldoARecaudar="resultados.suma_pagos_deptos"
       descriptionPagos="Pagos a Realizar por Gastos" :pagos="(resultados.deuda_total-edificio.dif_saldo_pretencion_fondo_edificio)"/>
-      <div class="html2pdf__page-break"></div>
       <depto-info-extra-vue :show_depto_info_extra="show_depto_info_extra" :cochera="cochera"/>
     </div>
   </div>
