@@ -165,7 +165,6 @@ export default function useExpensas(emit){
    emit('setValueMonth', item)
   }
   const setValueMonth = (item) => {
-    console.log(item)
     return valueMonth.value = item
   }
 
