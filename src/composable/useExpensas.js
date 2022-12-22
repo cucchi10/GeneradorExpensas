@@ -1,7 +1,9 @@
 import {  reactive, ref } from "@vue/reactivity";
 import { watch } from "@vue/runtime-core";
 
-import $ from "jquery";
+import { createToaster } from "@meforma/vue-toaster";
+
+const toaster = createToaster();
 
 import html2pdf from 'html2pdf.js';
 
@@ -169,10 +171,10 @@ export default function useExpensas(emit){
 
   const doExportPDF = (item, month) => {
     if(!Object.values(item).length){
-      return console.log('no hay info de depto')
+      return toaster.error('Selecciona un Departamento en la Tabla',{position: 'bottom'});
     }
     if(month === 'Seleccione un Mes'){
-      return console.log('no hay info de mes')
+      return toaster.error('Selecciona un Mes',{position: 'top'});
     }
     let depto = item.index
     let mes = month
