@@ -27,6 +27,10 @@
               <th scope="row">Saldo a Favor Anterior</th>
               <td>{{ `$ ${show_depto_info_extra.saldo_favor.toFixed(2)}` }}</td>
             </tr>
+            <tr v-if="extraordinarias !== 0">
+              <th scope="row">Detalle Correspondiente por Extraordinarias</th>
+              <td>{{ `$ ${((extraordinarias*show_depto_info_extra.superficie)/100).toFixed(2)}` }}</td>
+            </tr>
             <tr>
               <th scope="row">{{ `A Pagar por ${show_depto_info_extra.superficie} % de Superficie Departamento` }}</th>
               <td>{{`$ ${show_depto_info_extra.a_pagar.toFixed(2)}`}}</td>
@@ -56,6 +60,10 @@ defineProps({
     default(){
       return {}
     }
+  },
+  extraordinarias:{
+    type: Number,
+    default: 0,
   },
   cochera:{
     type: Object,

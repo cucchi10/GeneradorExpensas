@@ -28,6 +28,8 @@ export default function useExpensas(emit){
 
   const otros_pagos= ref([])
 
+  const otras_extraordinarias= ref([])
+
   // EDIFICIO
 
   const edificio = reactive({
@@ -65,7 +67,8 @@ export default function useExpensas(emit){
   })
 
   // Para que no me caguen, si cambian algun campo con REF
-  watch([gastos_habituales,cochera,edificio,otros_pagos.value,deptos], ([gasto_habitual, coch, edi, otro_pago, depto])=>{
+  watch([gastos_habituales,cochera,edificio,otros_pagos.value,deptos, otras_extraordinarias.value], ([gasto_habitual, coch, edi, otro_pago,depto, 
+    otra_extraordinaria])=>{
     if(coch) {
       cochera.a_pagar_por_cochera= coch.gastos_arba_cocheras*cochera.superficie/100
     }
@@ -94,7 +97,18 @@ export default function useExpensas(emit){
 
   // Function
 
-  const createNewPago = () => {
+  const createNewExtraordinaria= () => {
+    let initial_value = 0
+    let initial_text = ''
+    return otras_extraordinarias.value.push({otra_extraordinaria: initial_value, description: initial_text})
+  }
+  const deleteNewExtraordinaria = () => {
+    if (otras_extraordinarias.value.length){
+      return otras_extraordinarias.value.pop()
+    }
+  }
+
+  const createNewPago  = () => {
     let initial_value = 0
     let initial_text = ''
     return otros_pagos.value.push({otro_pago: initial_value, description: initial_text})
@@ -114,6 +128,11 @@ export default function useExpensas(emit){
     if(otros_pagos.value.length){
       resultados.deuda_deptos+=otros_pagos.value.reduce((acc,value)=>{
       return acc+=value.otro_pago
+    }, 0)
+    }
+    if(otras_extraordinarias.value.length){
+      resultados.deuda_deptos+=otras_extraordinarias.value.reduce((acc,value)=>{
+      return acc+=value.otra_extraordinaria
     }, 0)
     }
     resultados.deuda_deptos+=edificio.dif_saldo_pretencion_fondo_edificio
@@ -218,5 +237,8 @@ export default function useExpensas(emit){
     setValueMonth,
     valueMonth,
     selectValueMonth,
+    otras_extraordinarias,
+    createNewExtraordinaria,
+    deleteNewExtraordinaria,
   }
 }

@@ -5,6 +5,7 @@ defineProps({
     gastos_habituales: Object,
     cochera: Object,
     otros_pagos: Array,
+    otras_extraordinarias: Array,
     edificio: Object,
     resultados: Object,
   })
@@ -53,10 +54,17 @@ defineProps({
           <td>{{`$ ${gastos_habituales.limpieza.toFixed(2)}`}}</td>
         </tr>
         <tr v-for="(otro_pago ,index) in otros_pagos" :key="index">
-          <template v-if="otro_pago.otro_pago !==0 && otro_pago.otro_pago !==''">
-            <th scope="row">{{`Pago Extra N° ${index+1}`}}</th>
-            <td>{{ otro_pago?.description || `Pago Extra N° ${index+1}`}}</td>
+          <template v-if="otro_pago.otro_pago !==0">
+            <th scope="row">{{`Otro Pago N° ${index+1}`}}</th>
+            <td>{{ otro_pago?.description || `Otro Pago N° ${index+1}`}}</td>
             <td>{{`$ ${otro_pago.otro_pago.toFixed(2)}`}}</td>
+          </template>
+        </tr>
+        <tr v-for="(otra_extraordinaria ,index) in otras_extraordinarias" :key="index">
+          <template v-if="otra_extraordinaria.otra_extraordinaria !==0">
+            <th scope="row">{{`Extraordinaria N° ${index+1}`}}</th>
+            <td>{{ otra_extraordinaria?.description || `Extraordinaria N° ${index+1}`}}</td>
+            <td>{{`$ ${otra_extraordinaria.otra_extraordinaria.toFixed(2)}`}}</td>
           </template>
         </tr>
         <tr class="table-results">
