@@ -10,10 +10,20 @@
 <script setup>
 import {defineProps, defineEmits} from 'vue';
 import { ref } from "@vue/reactivity";
-import { watch } from "@vue/runtime-core";
+import { watch, onMounted } from "@vue/runtime-core";
 const value = ref('')
-defineProps({
+
+onMounted(()=>{
+  if(props.item){
+    value.value = props.item
+  }
+})
+const props = defineProps({
   descriptionValue: String,
+  item:{
+    type: String,
+    default: null
+  }
 })
 const emit = defineEmits(['onChangeDobleText'])
 watch(value, (value)=>{

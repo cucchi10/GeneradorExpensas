@@ -1,12 +1,6 @@
 import {  reactive, ref } from "@vue/reactivity";
 import { watch } from "@vue/runtime-core";
 
-import { createToaster } from "@meforma/vue-toaster";
-
-const toaster = createToaster();
-
-import html2pdf from 'html2pdf.js';
-
 export default function useExpensas(emit){
 
   const show_depto_info_extra = ref({})
@@ -67,8 +61,8 @@ export default function useExpensas(emit){
   })
 
   // Para que no me caguen, si cambian algun campo con REF
-  watch([gastos_habituales,cochera,edificio,otros_pagos.value,deptos, otras_extraordinarias.value], ([gasto_habitual, coch, edi, otro_pago,depto, 
-    otra_extraordinaria])=>{
+  watch([gastos_habituales,cochera,edificio,otros_pagos.value,deptos, otras_extraordinarias.value, valueMonth], ([gasto_habitual, coch, edi, otro_pago,depto, 
+    otra_extraordinaria, mes])=>{
     if(coch) {
       cochera.a_pagar_por_cochera= coch.gastos_arba_cocheras*cochera.superficie/100
     }
@@ -187,36 +181,9 @@ export default function useExpensas(emit){
     return valueMonth.value = item
   }
 
-  const doExportPDF = (item, month) => {
-    if(!Object.values(item).length){
-      return toaster.error('Selecciona un Departamento en la Tabla',{position: 'bottom'});
-    }
-    if(month === 'Seleccione un Mes'){
-      return toaster.error('Selecciona un Mes',{position: 'top'});
-    }
-    let depto = item.index
-    let mes = month
-
-    
-    let element = document.getElementById('ExpensasPDF');
-    element.classList.add('class-pdf');
-    
-    let opt = {
-      margin:       0.6,
-      filename:     `Expensas_${mes}_${depto}.pdf`,
-      image:        { type: 'jpg', quality: 0.9 },
-      html2canvas:  { scale: 2  },
-      jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait',compressPDF: false },
-      pagebreak: {mode: ['avoid-all']}
-    };
-
-    let title = document.getElementById('TittlePdf');
-    title.classList.remove('class-title-pdf');
-
-    html2pdf().from(element).set(opt).save().finally(()=>{element.classList.remove('class-pdf'),  title.classList.add('class-title-pdf')});
-    
+  const SendPagoResult = ({deuda_depto_value,saldo_favor_value,index,deptos})=>{
+   return deptos[index].deuda_depto = deuda_depto_value,deptos[index].saldo_favor = saldo_favor_value  
   }
-  
 
   return{
     gastos_habituales,
@@ -233,12 +200,12 @@ export default function useExpensas(emit){
     selectDepto,
     show_depto_info_extra,
     showDeptoSelect,
-    doExportPDF,
     setValueMonth,
     valueMonth,
     selectValueMonth,
     otras_extraordinarias,
     createNewExtraordinaria,
     deleteNewExtraordinaria,
+    SendPagoResult,
   }
 }

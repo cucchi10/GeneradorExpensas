@@ -5,10 +5,10 @@
       <div class="input-group-prepend">
         <span class="input-group-text">{{ descriptionValue }}</span>
       </div>
-      <input type="number" class="form-control" aria-label="Amount (to the nearest dollar)" v-model="value">
+      <input lang="es" type="number" class="form-control" aria-label="Amount (to the nearest dollar)" v-model="value">
     </div>
     <input-doble-component-vue v-if="dobleComponent" @onChangeDoble="(value)=>secondValue=value"
-      :descriptionValue="descriptionValueDoble"
+      :descriptionValue="descriptionValueDoble" :item="itemDoble"
     />
     <input-doble-component-text-vue v-if="dobleComponentText" @onChangeDobleText="(value)=>textValue=value"
       :descriptionValue="descriptionValueDobleText"
@@ -21,11 +21,30 @@ import InputDobleComponentTextVue from './InputDobleComponentText.vue';
 import InputDobleComponentVue from './InputDobleComponent.vue';
 import {defineProps, defineEmits} from 'vue';
 import { ref } from "@vue/reactivity";
-import { watch } from "@vue/runtime-core";
+import { onMounted, watch } from "@vue/runtime-core";
 const value = ref(0)
 const secondValue = ref(0)
 const textValue = ref('')
-defineProps({
+
+onMounted(()=>{
+  if(props.item){
+    value.value = props.item
+  }
+})
+
+const props = defineProps({
+  item:{
+    type: Number,
+    default: null
+  },
+  itemDoble:{
+    type: Number,
+    default: null
+  },
+  itemText:{
+    type: String,
+    default: null
+  },
   titleValue: {
     type: String,
     default: 'Valor'

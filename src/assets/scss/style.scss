@@ -7,6 +7,11 @@
     --text-color: #ccc;
     --header-color: #1B233D;
     --footer-color: #131211;
+    .accordion{
+      --bs-accordion-bg: #333;
+      --bs-accordion-border-color: #222;
+      --bs-accordion-active-bg: #222;
+    }
     .table-results *, .table-headers *{
     background-color: var(--bg-color-more);
     color: #E8CEB8;
