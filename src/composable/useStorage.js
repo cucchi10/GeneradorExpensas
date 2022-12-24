@@ -226,7 +226,7 @@ export default function useStorage(SendPagoResult){
       let saldo_favor_value = 0
 
       let valor = 0
-      valor = deuda_depto[index]-value
+      valor = Number((deuda_depto[index]-value).toFixed(2))
 
       if(Math.sign(valor) === 0 || Math.sign(valor) === 1){
         deuda_depto_value= valor, saldo_favor_value = saldo_favor[index]
