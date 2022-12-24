@@ -8,18 +8,20 @@ import GastosDepartamentoTableVue from '../components/GastosDepartamentoTable.vu
 import DeptoInfoExtraVue from '../components/DeptoInfoExtra.vue';
 import TableSaldoCierreVue from '../components/TableSaldoCierre.vue';
 import AcordeonComponentVue from '../components/AcordeonComponent.vue';
+import SelectedMonthVue from '../components/SelectMonth.vue';
 
-import SelectedMonthVue from '../components/SelectMonth.vue'
 import {onBeforeMount } from '@vue/runtime-core';
+import {defineEmits} from 'vue';
+
+const emit = defineEmits(['setLoaderEmit'])
 
 const {
     gastos_habituales,cochera,otros_pagos,edificio,deptos,expensas_generadas,resultados,createNewPago,deleteNewPago,doGenerateExpensas,
     show_depto_info_extra, showDeptoSelect, valueMonth, setValueMonth, otras_extraordinarias, deleteNewExtraordinaria, 
-    createNewExtraordinaria, ExpensasPDF,SendPagoResult} = useExpensas()
+    createNewExtraordinaria,SendPagoResult} = useExpensas()
 
 const {datos_session, doLocaleStorage, setLocaleStorage, deleteLocaleStorage, refTxt, uploadTxt, downloadTxt,doExportPDF,
-SendPagoStorage} = useStrorage(SendPagoResult)
-
+SendPagoStorage,doExportPDFMasive} = useStrorage(SendPagoResult,showDeptoSelect,emit)
 
 onBeforeMount(()=>{
   setLocaleStorage(deptos, edificio, valueMonth)
@@ -115,6 +117,8 @@ onBeforeMount(()=>{
   <div class="container mt-5">
     <div class="d-flex justify-content-between flex-wrap align-items-center">
       <div class="d-flex flex-column justify-content-center align-items-start mb-3 gap-3">
+        <button v-if="expensas_generadas" type="button" class="btn btn-info" @click="doExportPDFMasive(show_depto_info_extra,valueMonth,deptos)" :disabled="!expensas_generadas">
+        <font-awesome-icon icon="fa-solid fa-file-pdf" /> Export All PDF</button>
       <label v-if="!datos_session" type="button" class="btn btn-outline-primary" ><font-awesome-icon icon="fa-solid fa-folder-open"/>
          Subir Archivo de Session<input type="file" ref="refTxt" @change="uploadTxt(deptos, edificio, valueMonth)" hidden></label>
            

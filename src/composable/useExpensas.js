@@ -171,7 +171,11 @@ export default function useExpensas(emit){
   }
 
   const showDeptoSelect = (item, index) => {
-    show_depto_info_extra.value = {...item, index: index}
+   if(!item){
+     show_depto_info_extra.value = {}
+   }else{
+     show_depto_info_extra.value = {...item, index: index}
+   }
   }
 
   const selectValueMonth = (item) => {

@@ -7,30 +7,40 @@ const toaster = createToaster();
 import html2pdf from 'html2pdf.js';
 
 import {saveAs} from 'file-saver';
+import { faL } from "@fortawesome/free-solid-svg-icons";
 
 const meses = ['Enero','Febrero' ,'Marzo' ,'Abril' ,'Mayo' ,'Junio' ,'Julio' ,'Agosto' ,'Julio' ,'Agosto' ,'Septiembre' ,'Octubre' ,'Noviembre' ,'Diciembre']
 
-export default function useStorage(SendPagoResult){
+export default function useStorage(SendPagoResult,showDeptoSelect,emit){
 
-  
     const refTxt =ref(null)
 
     const datos_session = ref(false)
     
     const archive_txt_result = ref(null)
 
+    const Loader = ref(true)
+
+    const setLoaderEmit = (value)=>{
+      emit('setLoaderEmit', value)
+    }
+    const setLoader = (value)=>{
+      Loader.value = value
+    }
+
     const doLocaleStorage = (deptos, edificio, valueMonth) => {
       try{
+      setLoaderEmit(true)
       const deuda_depto = [] // aca pusheo el a_pagar
       const saldo_favor = [] // aca pusheo el new_saldo_favor
       const saldo_anterior_fondo_edificio = edificio.saldo_al_cierre
       const mesValue = valueMonth
       
       if(mesValue === 'Seleccione un Mes'){
-        return toaster.error(`Para Guardar Datos en Session, Seleccione un mes`,{position: 'top-right'});
+        return toaster.error(`Para Guardar Datos en Session, Seleccione un mes`,{position: 'top-right'}), setLoaderEmit(false);
       }
       const findIndexMonth = meses.findIndex(x=> x === mesValue )
-      if (!findIndexMonth) {return toaster.error(`Me la quisiste Bugear, Seleccione un mes`,{position: 'top-right'});}
+      if (!findIndexMonth) {return toaster.error(`Me la quisiste Bugear, Seleccione un mes`,{position: 'top-right'}),setLoaderEmit(false)}
 
       let selectLaterMonth = null
       if(!meses[findIndexMonth+1]){
@@ -55,7 +65,7 @@ export default function useStorage(SendPagoResult){
         localStorage.setItem('deuda_depto', JSON.stringify(deuda_depto))
         localStorage.setItem('saldo_favor', JSON.stringify(saldo_favor))
       }
-      return toaster.success(`Datos en Session Guardados`), datos_session.value = true
+      return toaster.success(`Datos en Session Guardados`), datos_session.value = true,setLoaderEmit(false)
     } catch (error){
       toaster.error(`Error Al Guardar Session - ${error}`,{position: 'top-right'})
        setTimeout(()=>{
@@ -67,9 +77,10 @@ export default function useStorage(SendPagoResult){
 
   const setLocaleStorage = (deptos, edificio, valueMonth) => {
     try{
+      setLoaderEmit(true)
       let value = localStorage.length;
       if(!value){
-        return toaster.error(`No Hay Datos en Session, Importa un Documento`,{position: 'top-right'});
+        return toaster.error(`No Hay Datos en Session, Importa un Documento`,{position: 'top-right'}),setLoaderEmit(false);
       }
 
       const mesValue =  JSON.parse(localStorage?.getItem('valueMonth'))
@@ -94,9 +105,11 @@ export default function useStorage(SendPagoResult){
       }) 
       }
     if(!findMonth){
-      return toaster.error(`No Tiene Mes Guardado, Se Recomienda Borrar Datos en Session`, {position: 'top-right'}),datos_session.value = true
+      return toaster.error(`No Tiene Mes Guardado, Se Recomienda Borrar Datos en Session`, {position: 'top-right'}),datos_session.value = true,
+      setLoaderEmit(false)
       }
-      return toaster.success(`Datos en Session Actualizados`),datos_session.value = true
+      return toaster.success(`Datos en Session Actualizados`),datos_session.value = true,
+      setLoaderEmit(false)
     }catch (error){
        toaster.error(`Error Al Cargar Session - ${error}`,{position: 'top-right'})
        setTimeout(()=>{
@@ -107,17 +120,19 @@ export default function useStorage(SendPagoResult){
   }
 
   const deleteLocaleStorage = () => {
+    setLoaderEmit(true)
     localStorage.clear()
     toaster.error(`Elimino los Datos en Session`, {position: 'top-right'})
-    return datos_session.value = false
+    return datos_session.value = false,setLoaderEmit(false)
   }
 
 
   const uploadTxt = async (deptos, edificio, valueMonth) => {
  
     try{
+      setLoaderEmit(true)
       let archive_txt = refTxt.value.files[0]
-      if(!archive_txt){return toaster.error(`Error Al Cargar el Archivo`,{position: 'top-left'}); }
+      if(!archive_txt){return toaster.error(`Error Al Cargar el Archivo`,{position: 'top-left'}),setLoaderEmit(false); }
 
       const reader = new FileReader();
       archive_txt_result.value = await new Promise((resolve)=>{
@@ -127,12 +142,12 @@ export default function useStorage(SendPagoResult){
           }
           reader.readAsText(archive_txt);
       })
-      if(!archive_txt_result.value){return toaster.error(`Error Al Leer el Archivo`,{position: 'top-left'}); }
+      if(!archive_txt_result.value){return toaster.error(`Error Al Leer el Archivo`,{position: 'top-left'}),setLoaderEmit(false); }
 
       const valores_txt = JSON.parse(archive_txt_result.value)
 
       if(!valores_txt){
-        return toaster.error(`No Hay Datos en Session Importados`,{position: 'top-right'});
+        return toaster.error(`No Hay Datos en Session Importados`,{position: 'top-right'}),setLoaderEmit(false);
       }
 
       //Borramos el Viejo Storage
@@ -159,6 +174,7 @@ export default function useStorage(SendPagoResult){
 
   const downloadTxt = (valueMonth) =>{
     try{
+      setLoaderEmit(true)
       const data = {}
       data.mesValue =  localStorage.getItem('valueMonth')
       data.saldo_anterior_fondo_edificio =  localStorage.getItem('edificio.saldo_anterior_fondo_edificio')
@@ -168,6 +184,7 @@ export default function useStorage(SendPagoResult){
       const file = new File([JSON.stringify(data)], `Data_Session_Expensas_${valueMonth}.txt`, {type: "text/plain"});
 
       saveAs(file);
+      setLoaderEmit(false)
     } catch (error){
       toaster.error(`Error Al Descargar Session - ${error}`,{position: 'top-right'});
       setTimeout(()=>{
@@ -178,13 +195,56 @@ export default function useStorage(SendPagoResult){
     
   }
 
+
+  const doExportPDFMasive = async (show_depto_info_extra,valueMonth,deptos)=>{
+    try{
+      setLoaderEmit(true)
+      let element = document.getElementById('ExpensasPDF');
+      element.classList.add('class-pdf');
+
+      let title = document.getElementById('TittlePdf');
+      title.classList.remove('class-title-pdf');
+
+      for (let [index, depto] of Object.entries(deptos)) {
+        showDeptoSelect(depto, index)
+        let opt = {
+          margin:       0.6,
+          filename:     `Expensas_${valueMonth}_${index}.pdf`,
+          image:        { type: 'jpg', quality: 0.9 },
+          html2canvas:  { scale: 2  },
+          jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait',compressPDF: false },
+          pagebreak: {mode: ['avoid-all']}
+        };
+        await html2pdf().from(element).set(opt).save()
+      }
+
+      showDeptoSelect(null)
+
+      let opt = {
+          margin:       0.6,
+          filename:     `Expensas_${valueMonth}_General.pdf`,
+          image:        { type: 'jpg', quality: 0.9 },
+          html2canvas:  { scale: 2  },
+          jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait',compressPDF: false },
+          pagebreak: {mode: ['avoid-all']}
+        };
+
+      html2pdf().from(element).set(opt).save().finally(()=>{element.classList.remove('class-pdf'),  title.classList.add('class-title-pdf')})
+      setLoaderEmit(false)
+      }catch (error){
+        toaster.error(`Error Al Generar PDF - ${error}`,{position: 'top-right'})
+        setLoaderEmit(false)
+      }
+  }
+
   const doExportPDF = (item, month) => {
     try{
+      setLoaderEmit(true)
       if(!Object.values(item).length){
-        return toaster.error('Selecciona un Departamento en la Tabla',{position: 'bottom'});
+        return toaster.error('Selecciona un Departamento en la Tabla',{position: 'bottom'}),setLoaderEmit(false);
       }
       if(month === 'Seleccione un Mes'){
-        return toaster.error('Selecciona un Mes',{position: 'top'});
+        return toaster.error('Selecciona un Mes',{position: 'top'}),setLoaderEmit(false);
       }
       let depto = item.index
       let mes = month
@@ -206,8 +266,10 @@ export default function useStorage(SendPagoResult){
       title.classList.remove('class-title-pdf');
 
       html2pdf().from(element).set(opt).save().finally(()=>{element.classList.remove('class-pdf'),  title.classList.add('class-title-pdf')});
+      setLoaderEmit(false)
     } catch (error){
-      toaster.error(`Error Al Generar PDF - ${error}`,{position: 'top-right'});
+      toaster.error(`Error Al Generar PDF - ${error}`,{position: 'top-right'})
+      setLoaderEmit(false)
     } 
   }
       
@@ -257,5 +319,9 @@ export default function useStorage(SendPagoResult){
     downloadTxt,
     doExportPDF,
     SendPagoStorage,
+    doExportPDFMasive,
+    Loader,
+    setLoader,
+    setLoaderEmit,
   }
 }
