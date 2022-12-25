@@ -229,8 +229,8 @@ export default function useStorage(SendPagoResult,showDeptoSelect,emit){
           pagebreak: {mode: ['avoid-all']}
         };
 
-      html2pdf().from(element).set(opt).save().finally(()=>{element.classList.remove('class-pdf'),  title.classList.add('class-title-pdf')})
-      setLoaderEmit(false)
+      html2pdf().from(element).set(opt).save().finally(()=>{element.classList.remove('class-pdf'),  title.classList.add('class-title-pdf')},setLoaderEmit(false))
+      
       }catch (error){
         toaster.error(`Error Al Generar PDF - ${error}`,{position: 'top-right'})
         setLoaderEmit(false)
@@ -265,8 +265,8 @@ export default function useStorage(SendPagoResult,showDeptoSelect,emit){
       let title = document.getElementById('TittlePdf');
       title.classList.remove('class-title-pdf');
 
-      html2pdf().from(element).set(opt).save().finally(()=>{element.classList.remove('class-pdf'),  title.classList.add('class-title-pdf')});
-      setLoaderEmit(false)
+      html2pdf().from(element).set(opt).save().finally(()=>{element.classList.remove('class-pdf'),  title.classList.add('class-title-pdf')},setLoaderEmit(false));
+      
     } catch (error){
       toaster.error(`Error Al Generar PDF - ${error}`,{position: 'top-right'})
       setLoaderEmit(false)

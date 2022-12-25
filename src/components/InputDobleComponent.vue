@@ -3,7 +3,7 @@
     <div class="input-group-prepend">
       <span class="input-group-text">{{ descriptionValue }}</span>
     </div>
-    <input type="number" class="form-control" aria-label="Amount (to the nearest dollar)" v-model="value">
+    <input type="number" class="form-control" aria-label="Amount (to the nearest dollar)" v-model="value" :disabled="!datos_session">
   </div>
 </template>
 
@@ -24,6 +24,10 @@ const props = defineProps({
     type: Number,
     default: null
   },
+   datos_session:{
+    type: Boolean,
+    default: false
+  }
 })
 const emit = defineEmits(['onChangeDoble'])
 watch(value, (value)=>{

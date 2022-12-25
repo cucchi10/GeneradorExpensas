@@ -108,7 +108,7 @@ onBeforeMount(()=>{
       <template v v-for="depto, index in deptos" :key="index">
         <input-component-vue :titleValue="`Depto N° ${index.replace('_',' ')}`" descriptionValue="Deuda $"
           descriptionValueDoble="A Favor $" :dobleComponent="true"  :item="depto.deuda_depto" :itemDoble="depto.saldo_favor"
-          @onChange="(value)=>depto.deuda_depto=value" @onChangeDoble="(secondValue)=>depto.saldo_favor=secondValue"
+          @onChange="(value)=>depto.deuda_depto=value" @onChangeDoble="(secondValue)=>depto.saldo_favor=secondValue" :datos_session="datos_session"
         />
       </template>
     </div>
