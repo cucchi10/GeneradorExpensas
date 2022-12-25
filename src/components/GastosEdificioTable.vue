@@ -25,8 +25,11 @@ defineProps({
       <tbody>
         <tr v-if="edificio.pretencion_fondo !== 0 || edificio.saldo_anterior_fondo_edificio !== 0 || edificio.saldos_favores_actuales !==0">
           <th scope="row">Fondo Reserva</th>
-          <td>{{ `Saldo Anterior de Reserva $ ${edificio.saldo_anterior_fondo_edificio.toFixed(2)}.
-          Saldos Favores de Deptos $ ${edificio.saldos_favores_actuales}. 
+          <td v-if="edificio.saldos_favores_actuales !==0">
+          {{ `Saldos a Favores de Deptos $ ${edificio.saldos_favores_actuales.toFixed(2)} a Descontar de 
+          Saldo Anterior de Reserva $ ${edificio.saldo_anterior_fondo_edificio.toFixed(2)} y 
+          faltante para llegar a Fondo Reserva $  ${edificio.pretencion_fondo.toFixed(2)}` }}</td>
+          <td v-else>{{ `Saldo Anterior de Reserva $ ${edificio.saldo_anterior_fondo_edificio.toFixed(2)}.
           Faltante para llegar a $  ${edificio.pretencion_fondo.toFixed(2)}` }}</td>
           <td>{{`$ ${edificio.dif_saldo_pretencion_fondo_edificio.toFixed(2)}`}}</td>
         </tr>
