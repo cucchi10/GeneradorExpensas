@@ -31,6 +31,7 @@ export default function useExpensas(emit){
     saldo_anterior_fondo_edificio: ref(0),
     saldo_al_cierre: ref(0),
     dif_saldo_pretencion_fondo_edificio: ref(0),
+    saldos_favores_actuales: ref(0),
   })
 
   // DEPTOS
@@ -66,26 +67,12 @@ export default function useExpensas(emit){
     if(coch) {
       cochera.a_pagar_por_cochera= coch.gastos_arba_cocheras*cochera.superficie/100
     }
-    if(edi){
-      if(edi.pretencion_fondo > edi.saldo_anterior_fondo_edificio){
-        edificio.dif_saldo_pretencion_fondo_edificio = edi.pretencion_fondo - (edi.saldo_anterior_fondo_edificio -
-         Object.values(deptos).reduce((acc,value)=>{
-        return acc+=value.saldo_favor
-        }, 0))
-      }else{
-        edificio.dif_saldo_pretencion_fondo_edificio = 0
-      }
-    }
-    if(depto){
-      if(edi.pretencion_fondo > edi.saldo_anterior_fondo_edificio){
-        edificio.dif_saldo_pretencion_fondo_edificio = edi.pretencion_fondo - (edi.saldo_anterior_fondo_edificio -
-         Object.values(deptos).reduce((acc,value)=>{
-        return acc+=value.saldo_favor
-        }, 0))
-      }else{
-        edificio.dif_saldo_pretencion_fondo_edificio = 0
-      }
-    }
+   if(edi){
+     edificio.saldos_favores_actuales =  Object.values(deptos).reduce((acc,value)=>{
+    return acc+=value.saldo_favor
+    }, 0)
+    edificio.dif_saldo_pretencion_fondo_edificio =edificio.saldos_favores_actuales+ edi.pretencion_fondo - (edi.saldo_anterior_fondo_edificio)
+   }  
     return expensas_generadas.value = false
   })
 
@@ -113,8 +100,12 @@ export default function useExpensas(emit){
     }
   }
 
-  const doGenerateExpensas = () => { 
+  const doGenerateExpensas = () => {
 
+    edificio.saldos_favores_actuales =  Object.values(deptos).reduce((acc,value)=>{
+        return acc+=value.saldo_favor
+        }, 0) 
+    edificio.dif_saldo_pretencion_fondo_edificio =edificio.saldos_favores_actuales+ edificio.pretencion_fondo - (edificio.saldo_anterior_fondo_edificio)
     // Se suma Toda la Deuda total Deptos
     resultados.deuda_deptos = Object.values(gastos_habituales).reduce((acc,value)=>{
       return acc+=value
@@ -154,7 +145,7 @@ export default function useExpensas(emit){
     show_depto_info_extra.value = {}
     // Sacamos la cuenta de cuanto nos tiene que quedar al cerrar cuentas
     edificio.saldo_al_cierre =  
-    ((edificio.dif_saldo_pretencion_fondo_edificio+edificio.saldo_anterior_fondo_edificio+resultados.suma_pagos_deptos)-resultados.deuda_total)
+    ((edificio.dif_saldo_pretencion_fondo_edificio+edificio.saldo_anterior_fondo_edificio)-resultados.deuda_total)
 
     
 

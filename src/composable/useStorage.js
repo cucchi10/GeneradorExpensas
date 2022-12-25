@@ -7,7 +7,6 @@ const toaster = createToaster();
 import html2pdf from 'html2pdf.js';
 
 import {saveAs} from 'file-saver';
-import { faL } from "@fortawesome/free-solid-svg-icons";
 
 const meses = ['Enero','Febrero' ,'Marzo' ,'Abril' ,'Mayo' ,'Junio' ,'Julio' ,'Agosto' ,'Julio' ,'Agosto' ,'Septiembre' ,'Octubre' ,'Noviembre' ,'Diciembre']
 
@@ -31,16 +30,17 @@ export default function useStorage(SendPagoResult,showDeptoSelect,emit){
     const doLocaleStorage = (deptos, edificio, valueMonth) => {
       try{
       setLoaderEmit(true)
+      
       const deuda_depto = [] // aca pusheo el a_pagar
       const saldo_favor = [] // aca pusheo el new_saldo_favor
       const saldo_anterior_fondo_edificio = edificio.saldo_al_cierre
       const mesValue = valueMonth
-      
+
       if(mesValue === 'Seleccione un Mes'){
         return toaster.error(`Para Guardar Datos en Session, Seleccione un mes`,{position: 'top-right'}), setLoaderEmit(false);
       }
       const findIndexMonth = meses.findIndex(x=> x === mesValue )
-      if (!findIndexMonth) {return toaster.error(`Me la quisiste Bugear, Seleccione un mes`,{position: 'top-right'}),setLoaderEmit(false)}
+      if (findIndexMonth === -1) {return toaster.error(`Me la quisiste Bugear, Seleccione un mes`,{position: 'top-right'}),setLoaderEmit(false)}
 
       let selectLaterMonth = null
       if(!meses[findIndexMonth+1]){

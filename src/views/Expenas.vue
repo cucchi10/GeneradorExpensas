@@ -36,7 +36,7 @@ onBeforeMount(()=>{
   <div class="d-flex justify-content-around align-items-center flex-wrap pt-5 pb-2">
     <div class="">
       <h3 class="text-center">Selecciona un Mes</h3>
-      <selected-month-vue class="mb-3" @setValueMonth="setValueMonth" :item="valueMonth"/>
+      <selected-month-vue class="mb-3" @setValueMonth="setValueMonth" :item="valueMonth" :datos_session="datos_session"/>
       <h3 class="text-center">Edificio</h3>
         <input-component-vue titleValue="Pretención de Fondo Final del Edificio" descriptionValue="$" 
           @onChange="(value)=>edificio.pretencion_fondo=value" :item="edificio.pretencion_fondo"

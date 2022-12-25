@@ -1,5 +1,5 @@
 <template>
-  <select class="form-select" aria-label="Default select example" v-model="value" @change="selectValueMonth(value)">
+  <select class="form-select" aria-label="Default select example" v-model="value" @change="selectValueMonth(value)" :disabled="datos_session">
     <option disabled>Seleccione un Mes</option>
     <option value="Enero">Enero</option>
     <option value="Febrero">Febrero</option>
@@ -32,6 +32,10 @@ const props = defineProps({
   item: {
     type: String,
     default: null
+  },
+  datos_session:{
+    type: Boolean,
+    default: false
   }
 })
 </script>
