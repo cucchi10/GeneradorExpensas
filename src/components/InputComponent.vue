@@ -5,7 +5,7 @@
       <div class="input-group-prepend">
         <span class="input-group-text">{{ descriptionValue }}</span>
       </div>
-      <input lang="es" type="number" class="form-control" aria-label="Amount (to the nearest dollar)" v-model="value" :disabled="!datos_session">
+      <input lang="es" type="number" class="form-control" aria-label="Amount (to the nearest dollar)" v-model="value" :disabled="datos_session">
     </div>
     <input-doble-component-vue v-if="dobleComponent" @onChangeDoble="(value)=>secondValue=value"
       :descriptionValue="descriptionValueDoble" :item="itemDoble" :datos_session="datos_session"

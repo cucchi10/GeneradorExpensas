@@ -3,7 +3,7 @@
     <div class="input-group-prepend">
       <span class="input-group-text">{{ descriptionValue }}</span>
     </div>
-    <input type="number" class="form-control" aria-label="Amount (to the nearest dollar)" v-model="value" :disabled="!datos_session">
+    <input type="number" class="form-control" aria-label="Amount (to the nearest dollar)" v-model="value" :disabled="datos_session">
   </div>
 </template>
 
