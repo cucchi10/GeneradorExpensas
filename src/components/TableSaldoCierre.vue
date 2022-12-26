@@ -25,6 +25,10 @@
         <th scope="row">{{ descriptionARecaudar }}</th>
         <td>{{ `$ ${saldoARecaudar.toFixed(2)}` }}</td>
       </tr>
+      <tr v-if="deudas > 0">
+        <th scope="row">{{ descriptionDeudas }}</th>
+        <td>{{ `$ ${deudas.toFixed(2)}` }}</td>
+      </tr>
       <tr v-if="saldosFavores > 0">
         <th scope="row">{{ descriptionSaldosFavores }}</th>
         <td>{{ `$ ${saldosFavores.toFixed(2)}` }}</td>
@@ -34,8 +38,8 @@
         <td>{{ `$ ${saldoFinal.toFixed(2)}` }}</td>
       </tr>
       <tr class="table-results">
-        <th scope="row">Dinero Real del Edificio</th>
-        <th>{{ `$ ${(saldoFinal-saldosFavores).toFixed(2)}` }}</th>
+        <th scope="row">Dinero Real del Edificio | <small>Se Descuenta Saldos Favores y Deudas Impagas Deptos</small></th>
+        <th>{{ `$ ${(saldoFinal-saldosFavores-deudas).toFixed(2)}` }}</th>
       </tr>
       </tbody>
     </table>
@@ -57,6 +61,8 @@ defineProps({
   extraordinarias: Number,
   descriptionSaldoReserva:String,
   saldoReserva:Number,
+  deudas:Number,
+  descriptionDeudas:String,
 })
 </script>
 

@@ -21,7 +21,7 @@ const {
     createNewExtraordinaria,SendPagoResult} = useExpensas()
 
 const {datos_session, doLocaleStorage, setLocaleStorage, deleteLocaleStorage, refTxt, uploadTxt, downloadTxt,doExportPDF,
-SendPagoStorage,doExportPDFMasive} = useStrorage(SendPagoResult,showDeptoSelect,emit)
+SendPagoStorage,doExportPDFMasive,datos_act_session} = useStrorage(SendPagoResult,showDeptoSelect,emit)
 
 onBeforeMount(()=>{
   setLocaleStorage(deptos, edificio, valueMonth)
@@ -117,12 +117,11 @@ onBeforeMount(()=>{
   <div class="container mt-5">
     <div class="d-flex justify-content-between flex-wrap align-items-center">
       <div class="d-flex flex-column justify-content-center align-items-start mb-3 gap-3">
-        <button v-if="expensas_generadas" type="button" class="btn btn-info" @click="doExportPDFMasive(show_depto_info_extra,valueMonth,deptos)" :disabled="!expensas_generadas">
+        <button v-if="expensas_generadas" type="button" class="btn btn-info" @click="doExportPDFMasive(valueMonth,deptos)" :disabled="!expensas_generadas">
         <font-awesome-icon icon="fa-solid fa-file-pdf" /> Export All PDF</button>
       <label v-if="!datos_session" type="button" class="btn btn-outline-primary" ><font-awesome-icon icon="fa-solid fa-folder-open"/>
-         Subir Archivo de Session<input type="file" ref="refTxt" @change="uploadTxt(deptos, edificio, valueMonth)" hidden></label>
-           
-      <button v-if="datos_session" type="button" class="btn btn-outline-primary" @click="downloadTxt(valueMonth)"><font-awesome-icon icon="fa-solid fa-download" />
+         Subir Archivo de Session<input type="file" ref="refTxt" @change="uploadTxt()" hidden></label>
+      <button v-if="datos_session&&datos_act_session" type="button" class="btn btn-outline-primary" @click="downloadTxt(valueMonth)"><font-awesome-icon icon="fa-solid fa-download" />
          Guardar Archivo de Session </button>
     </div>
     <div class="d-flex flex-column justify-content-center align-items-end mb-3 gap-3">
@@ -156,19 +155,21 @@ onBeforeMount(()=>{
       />
       <div class="html2pdf__page-break"></div>
       <table-saldo-cierre-vue descriptionFinal="Saldo al cierre de Caja" :saldoFinal="edificio.saldo_al_cierre"
-        descriptionSaldosFavores="Suma de Saldos a Favores de los Departamentos" :saldosFavores="Object.values(deptos).reduce((acc,value)=>{
-      return acc+=value.new_saldo_favor
-    }, 0)"
-      descriptionARecaudar="Saldo a recaudar Por Pagos" :saldoARecaudar="resultados.suma_pagos_deptos"
-      descriptionPagos="Pagos a Realizar por Gastos" :pagos="(resultados.deuda_total-edificio.dif_saldo_pretencion_fondo_edificio)"
-      descriptionExtraordinarias="Detalle por Extraordinarias"
-      :extraordinarias="otras_extraordinarias.reduce((acc,value)=>{
-      return acc+=value.otra_extraordinaria
-    }, 0)"
-      descriptionSaldoReserva="Saldo Anterior de Reserva" :saldoReserva="edificio.saldo_anterior_fondo_edificio"/>
+        descriptionSaldosFavores="Suma de Saldos a Favores de los Departamentos" 
+        descriptionARecaudar="Saldo a recaudar Por Pagos" descriptionSaldoReserva="Saldo Anterior de Reserva" 
+        descriptionPagos="Pagos a Realizar por Gastos" descriptionExtraordinarias="Detalle por Extraordinarias"
+        :saldoReserva="edificio.saldo_anterior_fondo_edificio" descriptionDeudas="Deudas de Saldos Impagos Deptos"
+        :pagos="(resultados.deuda_total-edificio.dif_saldo_pretencion_fondo_edificio)" :saldoARecaudar="resultados.suma_pagos_deptos"
+        :deudas="Object.values(deptos).reduce((acc,value)=>{
+          return acc+=value.deuda_depto}, 0)"
+        :extraordinarias="otras_extraordinarias.reduce((acc,value)=>{
+          return acc+=value.otra_extraordinaria}, 0)"
+        :saldosFavores="Object.values(deptos).reduce((acc,value)=>{
+          return acc+=value.new_saldo_favor}, 0)"
+      />
       <depto-info-extra-vue :show_depto_info_extra="show_depto_info_extra" :cochera="cochera" :extraordinarias="otras_extraordinarias.reduce((acc,value)=>{
-      return acc+=value.otra_extraordinaria
-    }, 0)"/>
+        return acc+=value.otra_extraordinaria}, 0)"
+      />
     </div>
   </div>
   <div style="min-height: 50px"></div>

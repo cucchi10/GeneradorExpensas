@@ -6,6 +6,7 @@ export default function useExpensas(emit){
   const show_depto_info_extra = ref({})
   const valueMonth = ref('Seleccione un Mes')
 
+
     // GASTOS
   const gastos_habituales = reactive({
     edenor: ref(0),

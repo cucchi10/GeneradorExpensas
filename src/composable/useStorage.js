@@ -20,6 +20,8 @@ export default function useStorage(SendPagoResult,showDeptoSelect,emit){
 
     const Loader = ref(true)
 
+    const datos_act_session= ref(false)
+
     const setLoaderEmit = (value)=>{
       emit('setLoaderEmit', value)
     }
@@ -65,7 +67,7 @@ export default function useStorage(SendPagoResult,showDeptoSelect,emit){
         localStorage.setItem('deuda_depto', JSON.stringify(deuda_depto))
         localStorage.setItem('saldo_favor', JSON.stringify(saldo_favor))
       }
-      return toaster.success(`Datos en Session Guardados`), datos_session.value = true,setLoaderEmit(false)
+      return toaster.success(`Datos en Session Guardados`), datos_session.value = true,datos_act_session.value =true,setLoaderEmit(false)
     } catch (error){
       toaster.error(`Error Al Guardar Session - ${error}`,{position: 'top-right'})
        setTimeout(()=>{
@@ -127,7 +129,7 @@ export default function useStorage(SendPagoResult,showDeptoSelect,emit){
   }
 
 
-  const uploadTxt = async (deptos, edificio, valueMonth) => {
+  const uploadTxt = async () => {
  
     try{
       setLoaderEmit(true)
@@ -196,7 +198,7 @@ export default function useStorage(SendPagoResult,showDeptoSelect,emit){
   }
 
 
-  const doExportPDFMasive = async (show_depto_info_extra,valueMonth,deptos)=>{
+  const doExportPDFMasive = async (valueMonth,deptos)=>{
     try{
       setLoaderEmit(true)
       let element = document.getElementById('ExpensasPDF');
@@ -323,5 +325,6 @@ export default function useStorage(SendPagoResult,showDeptoSelect,emit){
     Loader,
     setLoader,
     setLoaderEmit,
+    datos_act_session,
   }
 }
