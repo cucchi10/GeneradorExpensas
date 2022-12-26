@@ -145,6 +145,7 @@ onBeforeMount(()=>{
         :otras_extraordinarias="otras_extraordinarias"
         :edificio="edificio"
         :resultados="resultados"
+        :valueMonth="valueMonth"
       />
       <div class="html2pdf__page-break"></div>
       <gastos-departamento-table-vue

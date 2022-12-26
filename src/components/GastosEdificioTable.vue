@@ -8,6 +8,7 @@ defineProps({
     otras_extraordinarias: Array,
     edificio: Object,
     resultados: Object,
+    valueMonth: String,
   })
 </script>
 
@@ -34,27 +35,27 @@ defineProps({
           <td>{{`$ ${edificio.dif_saldo_pretencion_fondo_edificio.toFixed(2)}`}}</td>
         </tr>
         <tr v-if="cochera.gastos_arba_cocheras !== 0">
-          <th scope="row">ARBA Cocheras</th>
+          <th scope="row">{{ `ARBA Cocheras ${valueMonth}` }}</th>
           <td>{{ `Impuesto Arba sobre cocheras $  ${cochera.gastos_arba_cocheras.toFixed(2)}` }}</td>
           <td>{{`$ ${cochera.gastos_arba_cocheras.toFixed(2)}`}}</td>
         </tr>
         <tr v-if="gastos_habituales.edenor !==0">
-          <th scope="row">Edenor</th>
+          <th scope="row">{{ `Edenor ${valueMonth}` }}</th>
           <td>{{ `Servico de Luz partes comunes/cocheras $ ${gastos_habituales.edenor.toFixed(2)}` }}</td>
           <td>{{`$ ${gastos_habituales.edenor.toFixed(2)}`}}</td>
         </tr>
         <tr v-if="gastos_habituales.aysa !==0">
-          <th scope="row">Aysa</th>
+          <th scope="row">{{ `Aysa ${valueMonth}` }}</th>
           <td>{{ `Servicio de Agua $ ${gastos_habituales.aysa.toFixed(2)}` }}</td>
           <td>{{`$ ${gastos_habituales.aysa.toFixed(2)}`}}</td>
         </tr>
         <tr v-if="gastos_habituales.v_lopez_abl !==0">
-          <th scope="row">V.Lopez</th>
+          <th scope="row">{{ `ABL V.Lopez ${valueMonth}` }}</th>
           <td>{{ `Impuesto V.Lopez $ ${gastos_habituales.v_lopez_abl.toFixed(2)}` }}</td>
           <td>{{`$ ${gastos_habituales.v_lopez_abl.toFixed(2)}`}}</td>
         </tr>
         <tr v-if="gastos_habituales.limpieza !==0">
-          <th scope="row">Personal Limpieza</th>
+          <th scope="row">{{ `Personal Limpieza ${valueMonth}` }}</th>
           <td>{{ `Personal Limpieza $ ${gastos_habituales.limpieza.toFixed(2)}` }}</td>
           <td>{{`$ ${gastos_habituales.limpieza.toFixed(2)}`}}</td>
         </tr>
