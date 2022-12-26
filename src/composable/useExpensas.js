@@ -38,15 +38,15 @@ export default function useExpensas(emit){
   // DEPTOS
 
   const deptos = reactive({
-    UF_01:  {superficie: 9.186, saldo_favor: ref(0),  new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0)},
-    UF_02:  {superficie: 7.971, saldo_favor: ref(0),  new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0)},
-    UF_03:  {superficie: 14.281, saldo_favor: ref(0), new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0)},
-    UF_04:  {superficie: 13.065, saldo_favor: ref(0), new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0)},
-    UF_05:  {superficie: 10.994, saldo_favor: ref(0), new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0)},
-    UF_06:  {superficie: 7.971, saldo_favor: ref(0),  new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0)},
-    UF_07:  {superficie: 9.186, saldo_favor: ref(0),  new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0)},
-    UF_08:  {superficie: 13.065, saldo_favor: ref(0), new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0)},
-    UF_09:  {superficie: 14.281, saldo_favor: ref(0), new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0)},
+    '01':  {superficie: 9.186, saldo_favor: ref(0),  new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0)},
+    '02':  {superficie: 7.971, saldo_favor: ref(0),  new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0)},
+    '03':  {superficie: 14.281, saldo_favor: ref(0), new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0)},
+    '04':  {superficie: 13.065, saldo_favor: ref(0), new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0)},
+    '05':  {superficie: 10.994, saldo_favor: ref(0), new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0)},
+    '06':  {superficie: 7.971, saldo_favor: ref(0),  new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0)},
+    '07':  {superficie: 9.186, saldo_favor: ref(0),  new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0)},
+    '08':  {superficie: 13.065, saldo_favor: ref(0), new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0)},
+    '09':  {superficie: 14.281, saldo_favor: ref(0), new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0)}
   })
 
   // PAGOS Y DEUDAS

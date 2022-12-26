@@ -2,7 +2,7 @@
   <div v-if="Object.values(show_depto_info_extra).length">
       <div class="table table-responsive ">
         <table class="table table-striped table-bordered">
-          <caption>{{ ` Detalle de ${show_depto_info_extra.index.replace('_', ' ')}` }}</caption>
+          <caption>{{ ` Detalle de Depto N° ${show_depto_info_extra.index}` }}</caption>
           <thead>
             <tr class="table-headers">
               <th scope="col">Descripción</th>

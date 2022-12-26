@@ -32,7 +32,7 @@ const {checkNewSaldo, selectDepto} = useExpensas(emit)
         <tr v-for="(depto ,index) in deptos" :key="index" >
           <th scope="row"><input class="form-check-input position-absolute ckeck-item-depto" type="radio" name="flexRadioDefault" 
             @click="selectDepto(depto,index)">
-            {{`${index.replace('_', ' ')}` }}</th>
+            {{`Depto N° ${index}` }}</th>
           <td>{{ `$ ${depto.deuda_depto}` }}</td>
           <td>{{ `$ ${depto.saldo_favor}` }}</td>
           <td>{{ `Superficie ${depto.superficie} %` }}</td>

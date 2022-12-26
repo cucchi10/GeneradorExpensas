@@ -30,7 +30,7 @@ onBeforeMount(()=>{
 </script>
 
 <template>
-  <div v-if="datos_session" class="pt-5 pb-2">
+  <div v-if="datos_session && !datos_act_session" class="pt-5 pb-2">
      <AcordeonComponentVue title="Pagos Realizados Por Deptos" :deptos="deptos" @onSendPago="SendPagoStorage"/>
   </div>
   <div class="d-flex justify-content-around align-items-center flex-wrap pt-5 pb-2">
@@ -106,7 +106,7 @@ onBeforeMount(()=>{
     <h3 class="text-center">Departamentos</h3>
     <div class="d-flex justify-content-around align-items-center flex-wrap">
       <template v v-for="depto, index in deptos" :key="index">
-        <input-component-vue :titleValue="`Depto N° ${index.replace('_',' ')}`" descriptionValue="Deuda $"
+        <input-component-vue :titleValue="`Depto N° ${index}`" descriptionValue="Deuda $"
           descriptionValueDoble="A Favor $" :dobleComponent="true"  :item="depto.deuda_depto" :itemDoble="depto.saldo_favor"
           @onChange="(value)=>depto.deuda_depto=value" @onChangeDoble="(secondValue)=>depto.saldo_favor=secondValue" :datos_session="datos_session"
         />
@@ -137,7 +137,7 @@ onBeforeMount(()=>{
         <font-awesome-icon icon="fa-solid fa-file-pdf" /> Exportar PDF</button>
     </div>
     <div v-if="expensas_generadas" id="ExpensasPDF" ref="ExpensasPDF">
-      <h2 class="text-center mb-5 class-title-pdf" id="TittlePdf">{{ `Expensas Correspondientes al Mes de ${valueMonth}` }}</h2>
+      <h2 class="text-center mb-5 class-title-pdf" id="TittlePdf">{{ `Expensas Correspondientes al Mes de ${valueMonth} del ${new Date().getFullYear()}` }}</h2>
       <gastos-edificio-table-vue
         :gastos_habituales="gastos_habituales"
         :cochera="cochera"

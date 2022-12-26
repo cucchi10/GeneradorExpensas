@@ -177,13 +177,14 @@ export default function useStorage(SendPagoResult,showDeptoSelect,emit){
   const downloadTxt = (valueMonth) =>{
     try{
       setLoaderEmit(true)
+      const Year = new Date().getFullYear()
       const data = {}
       data.mesValue =  localStorage.getItem('valueMonth')
       data.saldo_anterior_fondo_edificio =  localStorage.getItem('edificio.saldo_anterior_fondo_edificio')
       data.deuda_depto =  localStorage.getItem('deuda_depto')
       data.saldo_favor = localStorage.getItem('saldo_favor')
 
-      const file = new File([JSON.stringify(data)], `Data_Session_Expensas_${valueMonth}.txt`, {type: "text/plain"});
+      const file = new File([JSON.stringify(data)], `Data_Session_Expensas_${valueMonth}_${Year}.txt`, {type: "text/plain"});
 
       saveAs(file);
       setLoaderEmit(false)
@@ -201,6 +202,7 @@ export default function useStorage(SendPagoResult,showDeptoSelect,emit){
   const doExportPDFMasive = async (valueMonth,deptos)=>{
     try{
       setLoaderEmit(true)
+      const Year = new Date().getFullYear()
       let element = document.getElementById('ExpensasPDF');
       element.classList.add('class-pdf');
 
@@ -211,7 +213,7 @@ export default function useStorage(SendPagoResult,showDeptoSelect,emit){
         showDeptoSelect(depto, index)
         let opt = {
           margin:       0.6,
-          filename:     `Expensas_${valueMonth}_${index}.pdf`,
+          filename:     `Expensas_${valueMonth}_${Year}_Dpto_${index}.pdf`,
           image:        { type: 'jpg', quality: 0.9 },
           html2canvas:  { scale: 2  },
           jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait',compressPDF: false },
@@ -224,7 +226,7 @@ export default function useStorage(SendPagoResult,showDeptoSelect,emit){
 
       let opt = {
           margin:       0.6,
-          filename:     `Expensas_${valueMonth}_General.pdf`,
+          filename:     `Expensas_${valueMonth}_${Year}_General.pdf`,
           image:        { type: 'jpg', quality: 0.9 },
           html2canvas:  { scale: 2  },
           jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait',compressPDF: false },
@@ -242,6 +244,7 @@ export default function useStorage(SendPagoResult,showDeptoSelect,emit){
   const doExportPDF = (item, month) => {
     try{
       setLoaderEmit(true)
+      const Year = new Date().getFullYear()
       if(!Object.values(item).length){
         return toaster.error('Selecciona un Departamento en la Tabla',{position: 'bottom'}),setLoaderEmit(false);
       }
@@ -257,7 +260,7 @@ export default function useStorage(SendPagoResult,showDeptoSelect,emit){
       
       let opt = {
         margin:       0.6,
-        filename:     `Expensas_${mes}_${depto}.pdf`,
+        filename:     `Expensas_${mes}_${Year}_Dpto_${depto}.pdf`,
         image:        { type: 'jpg', quality: 0.9 },
         html2canvas:  { scale: 2  },
         jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait',compressPDF: false },
