@@ -137,7 +137,8 @@ onBeforeMount(()=>{
         <font-awesome-icon icon="fa-solid fa-file-pdf" /> Exportar PDF</button>
     </div>
     <div v-if="expensas_generadas" id="ExpensasPDF" ref="ExpensasPDF">
-      <h2 class="text-center mb-5 class-title-pdf" id="TittlePdf">{{ `Expensas Correspondientes al Mes de ${valueMonth} del ${new Date().getFullYear()}` }}</h2>
+      <h2 v-if="valueMonth === 'Enero' && new Date().getMonth() === 11" class="text-center mb-5 class-title-pdf" id="TittlePdf">{{ `Expensas Correspondientes al Mes de ${valueMonth} del ${ mes = (new Date().getFullYear()+1)}` }}</h2>
+      <h2 v-else class="text-center mb-5 class-title-pdf" id="TittlePdf">{{ `Expensas Correspondientes al Mes de ${valueMonth} del ${new Date().getFullYear()}` }}</h2>
       <gastos-edificio-table-vue
         :gastos_habituales="gastos_habituales"
         :cochera="cochera"
