@@ -145,7 +145,7 @@ export default function useExpensas(emit){
     show_depto_info_extra.value = {}
     // Sacamos la cuenta de cuanto nos tiene que quedar al cerrar cuentas
     edificio.saldo_al_cierre =  
-    ((edificio.dif_saldo_pretencion_fondo_edificio+edificio.saldo_anterior_fondo_edificio)-resultados.deuda_total)
+    ((edificio.dif_saldo_pretencion_fondo_edificio+edificio.saldo_anterior_fondo_edificio+resultados.suma_pagos_deptos)-resultados.deuda_total)
 
     
 
