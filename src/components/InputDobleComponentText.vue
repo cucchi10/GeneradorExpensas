@@ -3,22 +3,13 @@
     <div class="input-group-prepend">
       <span class="input-group-text">{{ descriptionValue }}</span>
     </div>
-    <input type="text" class="form-control"  v-model="value">
+    <input type="text" class="form-control" :value="item" @input="sendItem($event.target.value)">
   </div>
 </template>
 
 <script setup>
 import {defineProps, defineEmits} from 'vue';
-import { ref } from "@vue/reactivity";
-import { watch, onMounted } from "@vue/runtime-core";
-const value = ref('')
-
-onMounted(()=>{
-  if(props.item){
-    value.value = props.item
-  }
-})
-const props = defineProps({
+defineProps({
   descriptionValue: String,
   item:{
     type: String,
@@ -26,9 +17,9 @@ const props = defineProps({
   }
 })
 const emit = defineEmits(['onChangeDobleText'])
-watch(value, (value)=>{
-  emit('onChangeDobleText',value)
-})
+const sendItem =(item) => {
+  emit('onChangeDobleText',item,'onChangeDobleText')
+}
 </script>
 
 <style lang="scss" scoped>

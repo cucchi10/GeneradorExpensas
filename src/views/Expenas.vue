@@ -17,14 +17,14 @@ const emit = defineEmits(['setLoaderEmit'])
 
 const {
     gastos_habituales,cochera,otros_pagos,edificio,deptos,expensas_generadas,resultados,createNewPago,deleteNewPago,doGenerateExpensas,
-    show_depto_info_extra, showDeptoSelect, valueMonth, setValueMonth, otras_extraordinarias, deleteNewExtraordinaria, 
-    createNewExtraordinaria,SendPagoResult} = useExpensas()
+    show_depto_info_extra, showDeptoSelect, valueMonth, otras_extraordinarias, deleteNewExtraordinaria, 
+    createNewExtraordinaria,SendPagoResult,setValueMonth} = useExpensas()
 
 const {datos_session, doLocaleStorage, setLocaleStorage, deleteLocaleStorage, refTxt, uploadTxt, downloadTxt,doExportPDF,
 SendPagoStorage,doExportPDFMasive,datos_act_session} = useStrorage(SendPagoResult,showDeptoSelect,emit)
 
 onBeforeMount(()=>{
-  setLocaleStorage(deptos, edificio, valueMonth)
+  setLocaleStorage(deptos, edificio, setValueMonth)
 })
 
 </script>
@@ -36,7 +36,7 @@ onBeforeMount(()=>{
   <div class="d-flex justify-content-around align-items-center flex-wrap pt-5 pb-2">
     <div class="">
       <h3 class="text-center">Selecciona un Mes</h3>
-      <selected-month-vue class="mb-3" @setValueMonth="setValueMonth" :item="valueMonth" :datos_session="datos_session"/>
+      <selected-month-vue class="mb-3" @setValueMonth="(value)=>valueMonth=value" :item="valueMonth" :datos_session="datos_session"/>
       <h3 class="text-center">Edificio</h3>
         <input-component-vue titleValue="Pretención de Fondo Final del Edificio" descriptionValue="$" 
           @onChange="(value)=>edificio.pretencion_fondo=value" :item="edificio.pretencion_fondo"
@@ -120,7 +120,7 @@ onBeforeMount(()=>{
         <button v-if="expensas_generadas" type="button" class="btn btn-info" @click="doExportPDFMasive(valueMonth,deptos)" :disabled="!expensas_generadas">
         <font-awesome-icon icon="fa-solid fa-file-pdf" /> Export All PDF</button>
       <label v-if="!datos_session" type="button" class="btn btn-outline-primary" ><font-awesome-icon icon="fa-solid fa-folder-open"/>
-         Subir Archivo de Session<input type="file" ref="refTxt" @change="uploadTxt()" hidden></label>
+         Subir Archivo de Session<input type="file" ref="refTxt" @change="uploadTxt(deptos, edificio, setValueMonth)" hidden></label>
       <button v-if="datos_session&&datos_act_session" type="button" class="btn btn-outline-primary" @click="downloadTxt(valueMonth)"><font-awesome-icon icon="fa-solid fa-download" />
          Guardar Archivo de Session </button>
     </div>

@@ -3,22 +3,15 @@
     <div class="input-group-prepend">
       <span class="input-group-text">{{ descriptionValue }}</span>
     </div>
-    <input type="number" class="form-control" aria-label="Amount (to the nearest dollar)" v-model="value" :disabled="datos_session">
+    <input type="number" class="form-control" aria-label="Amount (to the nearest dollar)" :value="item" @input="sendItem($event.target.value)"
+     :disabled="datos_session">
   </div>
 </template>
 
 <script setup>
 import {defineProps, defineEmits} from 'vue';
-import { ref } from "@vue/reactivity";
-import { watch, onMounted } from "@vue/runtime-core";
-const value = ref(0)
 
-onMounted(()=>{
-  if(props.item){
-    value.value = props.item
-  }
-})
-const props = defineProps({
+defineProps({
   descriptionValue: String,
   item:{
     type: Number,
@@ -30,9 +23,13 @@ const props = defineProps({
   }
 })
 const emit = defineEmits(['onChangeDoble'])
-watch(value, (value)=>{
-  emit('onChangeDoble',value)
-})
+const sendItem =(item) => {
+  if(item === ''){
+     emit('onChangeDoble',0,'onChangeDoble')
+  }else{
+    emit('onChangeDoble',Number(item),'onChangeDoble')
+  }
+}
 </script>
 
 <style lang="scss" scoped>

@@ -173,15 +173,12 @@ export default function useExpensas(emit){
    }
   }
 
-  const selectValueMonth = (item) => {
-   emit('setValueMonth', item)
-  }
-  const setValueMonth = (item) => {
-    return valueMonth.value = item
-  }
-
   const SendPagoResult = ({deuda_depto_value,saldo_favor_value,index,deptos})=>{
    return deptos[index].deuda_depto = deuda_depto_value,deptos[index].saldo_favor = saldo_favor_value  
+  }
+
+  const setValueMonth = (item) => {
+    return valueMonth.value = item
   }
 
   return{
@@ -199,12 +196,11 @@ export default function useExpensas(emit){
     selectDepto,
     show_depto_info_extra,
     showDeptoSelect,
-    setValueMonth,
     valueMonth,
-    selectValueMonth,
     otras_extraordinarias,
     createNewExtraordinaria,
     deleteNewExtraordinaria,
     SendPagoResult,
+    setValueMonth,
   }
 }

@@ -69,6 +69,7 @@ export default function useStorage(SendPagoResult,showDeptoSelect,emit){
       }
       return toaster.success(`Datos en Session Guardados`), datos_session.value = true,datos_act_session.value =true,setLoaderEmit(false)
     } catch (error){
+      setLoaderEmit(false)
       toaster.error(`Error Al Guardar Session - ${error}`,{position: 'top-right'})
        setTimeout(()=>{
         deleteLocaleStorage()
@@ -77,7 +78,7 @@ export default function useStorage(SendPagoResult,showDeptoSelect,emit){
     }
   }
 
-  const setLocaleStorage = (deptos, edificio, valueMonth) => {
+  const setLocaleStorage = (deptos, edificio, setValueMonth) => {
     try{
       setLoaderEmit(true)
       let value = localStorage.length;
@@ -85,16 +86,16 @@ export default function useStorage(SendPagoResult,showDeptoSelect,emit){
         return toaster.error(`No Hay Datos en Session, Importa un Documento`,{position: 'top-right'}),setLoaderEmit(false);
       }
 
-      const mesValue =  JSON.parse(localStorage?.getItem('valueMonth'))
-      const saldo_anterior_fondo_edificio = Number(JSON.parse(localStorage?.getItem('edificio.saldo_anterior_fondo_edificio')))
-      const deuda_depto = JSON.parse(localStorage?.getItem('deuda_depto'))
-      const saldo_favor = JSON.parse(localStorage?.getItem('saldo_favor'))
+      const mesValue =  JSON.parse(localStorage.getItem('valueMonth'))
+      const saldo_anterior_fondo_edificio = Number(JSON.parse(localStorage.getItem('edificio.saldo_anterior_fondo_edificio')))
+      const deuda_depto = JSON.parse(localStorage.getItem('deuda_depto'))
+      const saldo_favor = JSON.parse(localStorage.getItem('saldo_favor'))
 
       let findMonth = null
       if(mesValue){
       findMonth = meses.find(x=> x === mesValue )
         if(findMonth){
-          valueMonth.value = mesValue
+          setValueMonth(mesValue)
         }
       }
       if(saldo_anterior_fondo_edificio){
@@ -113,6 +114,7 @@ export default function useStorage(SendPagoResult,showDeptoSelect,emit){
       return toaster.success(`Datos en Session Actualizados`),datos_session.value = true,
       setLoaderEmit(false)
     }catch (error){
+       setLoaderEmit(false)
        toaster.error(`Error Al Cargar Session - ${error}`,{position: 'top-right'})
        setTimeout(()=>{
         deleteLocaleStorage()
@@ -129,7 +131,7 @@ export default function useStorage(SendPagoResult,showDeptoSelect,emit){
   }
 
 
-  const uploadTxt = async () => {
+  const uploadTxt = async (deptos, edificio, setValueMonth) => {
  
     try{
       setLoaderEmit(true)
@@ -160,12 +162,13 @@ export default function useStorage(SendPagoResult,showDeptoSelect,emit){
       localStorage.setItem('deuda_depto',valores_txt.deuda_depto)
       localStorage.setItem('saldo_favor',valores_txt.saldo_favor)
         
-      toaster.success(`Datos Actualizados Correctamente, Se Aplicaran los Cambios`)
-        
+      toaster.success(`Datos Leidos Correctamente, Se Aplicaran los Cambios`)
+       
       setTimeout(()=>{
-        return location.reload()
-      },600)
+        return setLocaleStorage(deptos, edificio, setValueMonth)
+      },500)
     } catch (error){
+      setLoaderEmit(false)
       toaster.error(`Error Al Cargar Session - ${error}`,{position: 'top-right'})
       setTimeout(()=>{
         deleteLocaleStorage()
@@ -189,6 +192,7 @@ export default function useStorage(SendPagoResult,showDeptoSelect,emit){
       saveAs(file);
       setLoaderEmit(false)
     } catch (error){
+      setLoaderEmit(false)
       toaster.error(`Error Al Descargar Session - ${error}`,{position: 'top-right'});
       setTimeout(()=>{
         deleteLocaleStorage()
@@ -273,8 +277,8 @@ export default function useStorage(SendPagoResult,showDeptoSelect,emit){
       html2pdf().from(element).set(opt).save().finally(()=>{element.classList.remove('class-pdf'),  title.classList.add('class-title-pdf')},setLoaderEmit(false));
       
     } catch (error){
-      toaster.error(`Error Al Generar PDF - ${error}`,{position: 'top-right'})
       setLoaderEmit(false)
+      toaster.error(`Error Al Generar PDF - ${error}`,{position: 'top-right'})
     } 
   }
       

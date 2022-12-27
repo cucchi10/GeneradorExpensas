@@ -1,5 +1,5 @@
 <template>
-  <select class="form-select" aria-label="Default select example" v-model="value" @change="selectValueMonth(value)" :disabled="datos_session">
+  <select class="form-select" aria-label="Default select example" :value="item" @change="selectValueMonth($event.target.value)" :disabled="datos_session">
     <option disabled>Seleccione un Mes</option>
     <option value="Enero">Enero</option>
     <option value="Febrero">Febrero</option>
@@ -17,18 +17,12 @@
 </template>
 
 <script setup>
-import {defineEmits, defineProps, onMounted} from 'vue';
-import { ref } from "@vue/reactivity";
-import useExpensas from '../composable/useExpensas.js';
+import {defineEmits, defineProps} from 'vue';
 const emit = defineEmits(['setValueMonth'])
-const {selectValueMonth} = useExpensas(emit)
-const value = ref('Seleccione un Mes')
-onMounted(()=>{
-  if(props.item){
-    value.value = props.item
-  }
-})
-const props = defineProps({
+const selectValueMonth = (item)=>{
+  emit('setValueMonth', item)
+}
+defineProps({
   item: {
     type: String,
     default: null
