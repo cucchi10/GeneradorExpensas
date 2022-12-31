@@ -111,20 +111,19 @@ onBeforeMount(()=>{
       <button v-if="otras_extraordinarias.length" type="button" class="btn btn-danger" @click="deleteNewExtraordinaria"><font-awesome-icon icon="fa-solid fa-trash"/>
          Eliminar Ultimo Campo de Extraordinarias </button>
     </div>
-
-    <AcordeonComponentVue title="Deuda y Saldo a Favor Departamentos" idAccordion="DeudasFavorDeptos" idHeading="DeudasFavorDeptosHeading" 
-    idCollapse="DeudasFavorDeptosCollapse">
-      <template #inner>
-        <template v v-for="depto, index in deptos" :key="index">
-          <input-component-vue :titleValue="`Depto N° ${index}`" descriptionValue="Deuda $"
-            descriptionValueDoble="A Favor $" :dobleComponent="true"  :item="depto.deuda_depto" :itemDoble="depto.saldo_favor"
-            @onChange="(value)=>depto.deuda_depto=value" @onChangeDoble="(secondValue)=>depto.saldo_favor=secondValue" :datos_session="datos_session"
-          />
-        </template>
-      </template>
-    </AcordeonComponentVue>
-
   </div>
+
+  <AcordeonComponentVue title="Deuda y Saldo a Favor Departamentos" idAccordion="DeudasFavorDeptos" idHeading="DeudasFavorDeptosHeading" 
+    idCollapse="DeudasFavorDeptosCollapse">
+    <template #inner>
+      <template v v-for="depto, index in deptos" :key="index">
+        <input-component-vue :titleValue="`Depto N° ${index}`" descriptionValue="Deuda $"
+          descriptionValueDoble="A Favor $" :dobleComponent="true"  :item="depto.deuda_depto" :itemDoble="depto.saldo_favor"
+          @onChange="(value)=>depto.deuda_depto=value" @onChangeDoble="(secondValue)=>depto.saldo_favor=secondValue" :datos_session="datos_session"
+        />
+      </template>
+    </template>
+  </AcordeonComponentVue>
 
   <div class="container mt-5">
     <div class="d-flex justify-content-between flex-wrap align-items-center">
