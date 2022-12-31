@@ -8,11 +8,7 @@
       </h2>
       <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
         <div class="accordion-body d-flex justify-content-around align-items-center flex-wrap">
-          <template v v-for="depto, index in Object.keys(deptos)" :key="index">
-            <input-component-vue :titleValue="`Depto N° ${depto.replace('_',' ')}`" descriptionValue="Pago $"
-            @onChange="(value)=>SendPago(value,depto,index, deptos)" 
-            />
-          </template>
+          <slot name="inner"></slot>
         </div>
       </div>
     </div>
@@ -20,22 +16,11 @@
 </template>
 
 <script setup>
-import InputComponentVue from "./InputComponent.vue";
 import {defineProps} from 'vue';
 
 defineProps({
   title: String,
-  deptos: Object,
 })
-const emit = defineEmits(['onSendPago'])
-const SendPago = (value, depto,index,deptos)=>{
-   if(value === ''){
-      emit('onSendPago',0, depto,index,deptos)
-  }else{
-     emit('onSendPago',value, depto,index,deptos)
-  }
-}
-
 </script>
 
 <style>

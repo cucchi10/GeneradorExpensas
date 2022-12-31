@@ -31,7 +31,15 @@ onBeforeMount(()=>{
 
 <template>
   <div v-if="datos_session && !datos_act_session" class="pt-5 pb-2">
-     <AcordeonComponentVue title="Pagos Realizados Por Deptos" :deptos="deptos" @onSendPago="SendPagoStorage"/>
+     <AcordeonComponentVue title="Pagos Realizados Por Departamentos">
+      <template #inner>
+        <template v v-for="depto, index in Object.keys(deptos)" :key="index">
+          <input-component-vue :titleValue="`Depto N° ${depto.replace('_',' ')}`" descriptionValue="Pago $"
+          @onChange="(value)=>SendPagoStorage(value,depto,index, deptos)"
+          />
+        </template>
+      </template>
+     </AcordeonComponentVue>
   </div>
   <div class="d-flex justify-content-around align-items-center flex-wrap pt-5 pb-2">
     <div class="">
@@ -103,15 +111,17 @@ onBeforeMount(()=>{
          Eliminar Ultimo Campo de Extraordinarias </button>
     </div>
 
-    <h3 class="text-center">Departamentos</h3>
-    <div class="d-flex justify-content-around align-items-center flex-wrap">
-      <template v v-for="depto, index in deptos" :key="index">
-        <input-component-vue :titleValue="`Depto N° ${index}`" descriptionValue="Deuda $"
-          descriptionValueDoble="A Favor $" :dobleComponent="true"  :item="depto.deuda_depto" :itemDoble="depto.saldo_favor"
-          @onChange="(value)=>depto.deuda_depto=value" @onChangeDoble="(secondValue)=>depto.saldo_favor=secondValue" :datos_session="datos_session"
-        />
+    <AcordeonComponentVue title="Deuda y Saldo a Favor Departamentos">
+      <template #inner>
+        <template v v-for="depto, index in deptos" :key="index">
+          <input-component-vue :titleValue="`Depto N° ${index}`" descriptionValue="Deuda $"
+            descriptionValueDoble="A Favor $" :dobleComponent="true"  :item="depto.deuda_depto" :itemDoble="depto.saldo_favor"
+            @onChange="(value)=>depto.deuda_depto=value" @onChangeDoble="(secondValue)=>depto.saldo_favor=secondValue" :datos_session="datos_session"
+          />
+        </template>
       </template>
-    </div>
+    </AcordeonComponentVue>
+
   </div>
 
   <div class="container mt-5">
