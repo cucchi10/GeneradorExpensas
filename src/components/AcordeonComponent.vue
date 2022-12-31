@@ -1,12 +1,13 @@
 <template>
-  <div class="accordion" id="accordionExample">
+  <div class="accordion" :id="idAccordion">
     <div class="accordion-item">
-      <h2 class="accordion-header" id="headingOne">
-        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+      <h2 class="accordion-header" :id="idHeading">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" :data-bs-target="`#${idCollapse}`" aria-expanded="true" 
+        :aria-controls="idCollapse">
         <h3 class="text-center"> {{ title }}</h3>
         </button>
       </h2>
-      <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+      <div :id="idCollapse" class="accordion-collapse collapse show" :aria-labelledby="idHeading" :data-bs-parent="`#${idAccordion}`">
         <div class="accordion-body d-flex justify-content-around align-items-center flex-wrap">
           <slot name="inner"></slot>
         </div>
@@ -20,6 +21,18 @@ import {defineProps} from 'vue';
 
 defineProps({
   title: String,
+  idAccordion:{
+    type: String,
+    default: 'accordionExample'
+  },
+  idHeading:{
+    type: String,
+    default: 'headingOne'
+  },
+  idCollapse:{
+    type: String,
+    default: 'collapseOne'
+  },
 })
 </script>
 

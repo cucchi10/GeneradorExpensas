@@ -31,7 +31,8 @@ onBeforeMount(()=>{
 
 <template>
   <div v-if="datos_session && !datos_act_session" class="pt-5 pb-2">
-     <AcordeonComponentVue title="Pagos Realizados Por Departamentos">
+     <AcordeonComponentVue title="Pagos Realizados Por Departamentos" idAccordion="PagosDeptos" idHeading="PagosDeptosHeading" 
+      idCollapse="PagosDeptosCollapse">
       <template #inner>
         <template v v-for="depto, index in Object.keys(deptos)" :key="index">
           <input-component-vue :titleValue="`Depto N° ${depto.replace('_',' ')}`" descriptionValue="Pago $"
@@ -111,7 +112,8 @@ onBeforeMount(()=>{
          Eliminar Ultimo Campo de Extraordinarias </button>
     </div>
 
-    <AcordeonComponentVue title="Deuda y Saldo a Favor Departamentos">
+    <AcordeonComponentVue title="Deuda y Saldo a Favor Departamentos" idAccordion="DeudasFavorDeptos" idHeading="DeudasFavorDeptosHeading" 
+    idCollapse="DeudasFavorDeptosCollapse">
       <template #inner>
         <template v v-for="depto, index in deptos" :key="index">
           <input-component-vue :titleValue="`Depto N° ${index}`" descriptionValue="Deuda $"
