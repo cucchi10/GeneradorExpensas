@@ -44,8 +44,10 @@ const {checkNewSaldo, selectDepto} = useExpensas(emit)
         </tr>
         <tr class="table-results">
           <th scope="row">Total</th>
-          <td></td>
-          <td></td>
+          <td>{{ `$ ${Object.values(deptos).reduce((acc,value)=>{
+          return acc+=value.deuda_depto}, 0).toFixed(2)}` }}</td>
+          <td>{{ `$ ${Object.values(deptos).reduce((acc,value)=>{
+          return acc+=value.saldo_favor}, 0).toFixed(2)}` }}</td>
           <td>{{ `Superficie ${resultados.superficie_deptos} %` }}</td>
           <td>{{ `$ ${resultados.deuda_deptos.toFixed(2)}` }}</td>
           <td v-if="cochera.gastos_arba_cocheras !==0">{{`Superficie ${resultados.superficie_cochera} %`}}</td>

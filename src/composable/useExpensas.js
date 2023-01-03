@@ -1,5 +1,7 @@
 import {  reactive, ref } from "@vue/reactivity";
 import { watch } from "@vue/runtime-core";
+import { createToaster } from "@meforma/vue-toaster";
+const toaster = createToaster();
 
 export default function useExpensas(emit){
 
@@ -102,6 +104,8 @@ export default function useExpensas(emit){
   }
 
   const doGenerateExpensas = () => {
+
+    if(valueMonth.value === 'Seleccione un Mes') return toaster.error(`Seleccione un mes, por favor`,{position: 'top'})
 
     edificio.saldos_favores_actuales =  Object.values(deptos).reduce((acc,value)=>{
         return acc+=value.saldo_favor

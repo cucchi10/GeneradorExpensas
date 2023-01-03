@@ -35,28 +35,28 @@ defineProps({
           <td>{{`$ ${edificio.dif_saldo_pretencion_fondo_edificio.toFixed(2)}`}}</td>
         </tr>
         <tr v-if="cochera.gastos_arba_cocheras !== 0">
-          <th scope="row">{{ `ARBA Cocheras ${valueMonth}` }}</th>
-          <td>{{ `Impuesto Arba sobre cocheras $  ${cochera.gastos_arba_cocheras.toFixed(2)}` }}</td>
+          <th scope="row">ARBA Cocheras</th>
+          <td>{{ `Impuesto Arba sobre cocheras, mes de ${valueMonth}, $  ${cochera.gastos_arba_cocheras.toFixed(2)}` }}</td>
           <td>{{`$ ${cochera.gastos_arba_cocheras.toFixed(2)}`}}</td>
         </tr>
         <tr v-if="gastos_habituales.edenor !==0">
-          <th scope="row">{{ `Edenor ${valueMonth}` }}</th>
-          <td>{{ `Servico de Luz partes comunes/cocheras $ ${gastos_habituales.edenor.toFixed(2)}` }}</td>
+          <th scope="row">Edenor</th>
+          <td>{{ `Servico de Luz, mes de ${valueMonth}, $ ${gastos_habituales.edenor.toFixed(2)}` }}</td>
           <td>{{`$ ${gastos_habituales.edenor.toFixed(2)}`}}</td>
         </tr>
         <tr v-if="gastos_habituales.aysa !==0">
-          <th scope="row">{{ `Aysa ${valueMonth}` }}</th>
-          <td>{{ `Servicio de Agua $ ${gastos_habituales.aysa.toFixed(2)}` }}</td>
+          <th scope="row">Aysa</th>
+          <td>{{ `Servicio de Agua, mes de ${valueMonth}, $ ${gastos_habituales.aysa.toFixed(2)}` }}</td>
           <td>{{`$ ${gastos_habituales.aysa.toFixed(2)}`}}</td>
         </tr>
         <tr v-if="gastos_habituales.v_lopez_abl !==0">
-          <th scope="row">{{ `ABL V.Lopez ${valueMonth}` }}</th>
-          <td>{{ `Impuesto V.Lopez $ ${gastos_habituales.v_lopez_abl.toFixed(2)}` }}</td>
+          <th scope="row">ABL V.Lopez</th>
+          <td>{{ `Impuesto V.Lopez, mes de ${valueMonth}, $ ${gastos_habituales.v_lopez_abl.toFixed(2)}` }}</td>
           <td>{{`$ ${gastos_habituales.v_lopez_abl.toFixed(2)}`}}</td>
         </tr>
         <tr v-if="gastos_habituales.limpieza !==0">
-          <th scope="row">{{ `Personal Limpieza ${valueMonth}` }}</th>
-          <td>{{ `Personal Limpieza $ ${gastos_habituales.limpieza.toFixed(2)}` }}</td>
+          <th scope="row">Personal Limpieza</th>
+          <td>{{ `Personal Limpieza, mes de ${valueMonth}, $ ${gastos_habituales.limpieza.toFixed(2)}` }}</td>
           <td>{{`$ ${gastos_habituales.limpieza.toFixed(2)}`}}</td>
         </tr>
         <tr v-for="(otro_pago ,index) in otros_pagos" :key="index">
