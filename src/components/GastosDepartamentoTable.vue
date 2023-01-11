@@ -52,7 +52,8 @@ const {checkNewSaldo, selectDepto} = useExpensas(emit)
           <td>{{ `$ ${resultados.deuda_deptos.toFixed(2)}` }}</td>
           <td v-if="cochera.gastos_arba_cocheras !==0">{{`Superficie ${resultados.superficie_cochera} %`}}</td>
           <td v-if="cochera.gastos_arba_cocheras !==0">{{ `$ ${cochera.gastos_arba_cocheras.toFixed(2)}` }}</td>
-          <td v-if="Object.values(deptos).some(checkNewSaldo)"></td>
+          <td v-if="Object.values(deptos).some(checkNewSaldo)">{{ `$ ${Object.values(deptos).reduce((acc,value)=>{
+          return acc+=value.new_saldo_favor}, 0).toFixed(2)}` }}</td>
           <th>{{`$ ${resultados.suma_pagos_deptos.toFixed(2)}`}}</th>
         </tr>
       </tbody>
