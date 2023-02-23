@@ -1,4 +1,10 @@
 # Vue 3 + Vite
+## FOTOS
+![1](./images/1.png)
+![2](./images/2.png)
+![3](./images/3.png)
+![4](./images/4.png)
+![5](./images/5.png)
 
 This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
 
