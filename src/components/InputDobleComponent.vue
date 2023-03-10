@@ -3,7 +3,7 @@
     <div class="input-group-prepend">
       <span class="input-group-text">{{ descriptionValue }}</span>
     </div>
-    <input type="number" class="form-control" aria-label="Amount (to the nearest dollar)" :value="item" @input="sendItem($event.target.value)"
+    <input type="text" class="form-control" :value="item" @input="sendItem($event.target.value)"
      :disabled="datos_session">
   </div>
 </template>
@@ -24,10 +24,11 @@ defineProps({
 })
 const emit = defineEmits(['onChangeDoble'])
 const sendItem =(item) => {
-  if(item === ''){
+  let number = Number(item)
+  if(!number){
      emit('onChangeDoble',0,'onChangeDoble')
   }else{
-    emit('onChangeDoble',Number(item),'onChangeDoble')
+    emit('onChangeDoble',number,'onChangeDoble')
   }
 }
 </script>

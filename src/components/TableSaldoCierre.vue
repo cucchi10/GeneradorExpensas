@@ -38,7 +38,7 @@
         <td>{{ `$ ${saldoFinal.toFixed(2)}` }}</td>
       </tr>
       <tr class="table-results">
-        <th scope="row">Dinero Real del Edificio | <small>Se Descuenta Saldos Favores y Deudas Impagas Deptos</small></th>
+        <th scope="row">Dinero Real del Edificio | <small style="font-size: .5em">Se Descuenta Saldos Favores, Deudas Impagas y Gastos Individual de Deptos</small></th>
         <th>{{ `$ ${(saldoFinal-saldosFavores-deudas).toFixed(2)}` }}</th>
       </tr>
       </tbody>

@@ -7,7 +7,7 @@ defineProps({
     resultados: Object,
   })
 const emit = defineEmits(['showDeptoSelect'])
-const {checkNewSaldo, selectDepto} = useExpensas(emit)
+const {checkNewSaldo, selectDepto,checkIndividual} = useExpensas(emit)
 </script>
 
 <template>
@@ -20,6 +20,7 @@ const {checkNewSaldo, selectDepto} = useExpensas(emit)
           <th scope="col">Depto</th>
           <th scope="col">Deuda</th>
           <th scope="col">Saldo Favor</th>
+          <th v-if="Object.values(deptos).some(checkIndividual)" scope="col">Gasto Individual</th>
           <th scope="col">Superficie Depto</th>
           <th scope="col">A Pagar Depto</th>
           <th v-if="cochera.gastos_arba_cocheras !==0" scope="col">Superficie Cochera</th>
@@ -35,6 +36,7 @@ const {checkNewSaldo, selectDepto} = useExpensas(emit)
             {{`Depto N° ${index}` }}</th>
           <td>{{ `$ ${depto.deuda_depto}` }}</td>
           <td>{{ `$ ${depto.saldo_favor}` }}</td>
+          <td v-if="Object.values(deptos).some(checkIndividual)">{{ `$ ${depto.individual}` }}</td>
           <td>{{ `Superficie ${depto.superficie} %` }}</td>
           <td>{{`$ ${depto.a_pagar.toFixed(2)}`}}</td>
           <td v-if="cochera.gastos_arba_cocheras !==0">{{ `Superficie ${cochera.superficie.toFixed(2)} %` }}</td>
@@ -48,6 +50,9 @@ const {checkNewSaldo, selectDepto} = useExpensas(emit)
           return acc+=value.deuda_depto}, 0).toFixed(2)}` }}</td>
           <td>{{ `$ ${Object.values(deptos).reduce((acc,value)=>{
           return acc+=value.saldo_favor}, 0).toFixed(2)}` }}</td>
+          <td v-if="Object.values(deptos).some(checkIndividual)">
+          {{ `$ ${Object.values(deptos).reduce((acc,value)=>{
+          return acc+=value.individual}, 0).toFixed(2)}` }}</td>
           <td>{{ `Superficie ${resultados.superficie_deptos} %` }}</td>
           <td>{{ `$ ${resultados.deuda_deptos.toFixed(2)}` }}</td>
           <td v-if="cochera.gastos_arba_cocheras !==0">{{`Superficie ${resultados.superficie_cochera} %`}}</td>

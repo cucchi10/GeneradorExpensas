@@ -27,6 +27,14 @@
               <th scope="row">Saldo a Favor Anterior</th>
               <td>{{ `$ ${show_depto_info_extra.saldo_favor.toFixed(2)}` }}</td>
             </tr>
+            <template v-if="show_depto_info_extra.individual.length">
+             <template v-for="(individual, index) in show_depto_info_extra.individual" :key="index">
+              <tr>
+                <th scope="row"><small>{{ `Gasto Individual N° ${index+1}` }}</small>{{individual.description? `, ${individual.description}` : ''}}</th>
+                <td>{{ `$ ${individual.valor.toFixed(2)}` }}</td>
+              </tr>
+             </template>
+            </template>
             <tr v-if="extraordinarias !== 0">
               <th scope="row">Detalle Correspondiente por Extraordinarias</th>
               <td>{{ `$ ${((extraordinarias*show_depto_info_extra.superficie)/100).toFixed(2)}` }}</td>

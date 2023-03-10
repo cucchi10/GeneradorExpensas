@@ -21,6 +21,7 @@ export default function useExpensas(emit){
     superficie: 11.11111111111111,
     gastos_arba_cocheras: ref(0),
     a_pagar_por_cochera: ref(0),
+    cuota: ref()
   })
 
   const otros_pagos= ref([])
@@ -40,16 +41,18 @@ export default function useExpensas(emit){
   // DEPTOS
 
   const deptos = reactive({
-    '01':  {superficie: 9.186, saldo_favor: ref(0),  new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0)},
-    '02':  {superficie: 7.971, saldo_favor: ref(0),  new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0)},
-    '03':  {superficie: 14.281, saldo_favor: ref(0), new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0)},
-    '04':  {superficie: 13.065, saldo_favor: ref(0), new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0)},
-    '05':  {superficie: 10.994, saldo_favor: ref(0), new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0)},
-    '06':  {superficie: 7.971, saldo_favor: ref(0),  new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0)},
-    '07':  {superficie: 9.186, saldo_favor: ref(0),  new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0)},
-    '08':  {superficie: 13.065, saldo_favor: ref(0), new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0)},
-    '09':  {superficie: 14.281, saldo_favor: ref(0), new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0)}
+    '01':  {superficie: 9.186, saldo_favor: ref(0),  new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0), individual: ref(0)},
+    '02':  {superficie: 7.971, saldo_favor: ref(0),  new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0), individual: ref(0)},
+    '03':  {superficie: 14.281, saldo_favor: ref(0), new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0), individual: ref(0)},
+    '04':  {superficie: 13.065, saldo_favor: ref(0), new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0), individual: ref(0)},
+    '05':  {superficie: 10.994, saldo_favor: ref(0), new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0), individual: ref(0)},
+    '06':  {superficie: 7.971, saldo_favor: ref(0),  new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0), individual: ref(0)},
+    '07':  {superficie: 9.186, saldo_favor: ref(0),  new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0), individual: ref(0)},
+    '08':  {superficie: 13.065, saldo_favor: ref(0), new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0), individual: ref(0)},
+    '09':  {superficie: 14.281, saldo_favor: ref(0), new_saldo_favor: ref(0), deuda_depto: ref(0), a_pagar: ref(0), a_pagar_total: ref(0), individual: ref(0)}
   })
+
+  const gastos_individual_deptos = ref([])
 
   // PAGOS Y DEUDAS
   const expensas_generadas = ref(false)
@@ -65,8 +68,8 @@ export default function useExpensas(emit){
   })
 
   // Para que no me caguen, si cambian algun campo con REF
-  watch([gastos_habituales,cochera,edificio,otros_pagos.value,deptos, otras_extraordinarias.value, valueMonth], ([gasto_habitual, coch, edi, otro_pago,depto, 
-    otra_extraordinaria, mes])=>{
+  watch([gastos_habituales,cochera,edificio,otros_pagos.value,deptos, otras_extraordinarias.value, valueMonth,gastos_individual_deptos.value], 
+    ([gasto_habitual, coch, edi, otro_pago,depto, otra_extraordinaria, mes, gastos_ind_depto])=>{
     if(coch) {
       cochera.a_pagar_por_cochera= coch.gastos_arba_cocheras*cochera.superficie/100
     }
@@ -103,9 +106,28 @@ export default function useExpensas(emit){
     }
   }
 
+  const createNewGastoIndividualDepto = () =>{
+    let initial_value = 0
+    let initial_text = ''
+    let initial_depto
+    return gastos_individual_deptos.value.push({valor: initial_value, depto: initial_depto, description: initial_text})
+  }
+  const deleteNewGastoIndividualDepto = () =>{
+    if(gastos_individual_deptos.value.length){
+      return gastos_individual_deptos.value.pop()
+    }
+  }
+
   const doGenerateExpensas = () => {
 
     if(valueMonth.value === 'Seleccione un Mes') return toaster.error(`Seleccione un mes, por favor`,{position: 'top'})
+
+    Object.entries(deptos).forEach(([key, depto])=>{
+      depto.individual = 0
+      gastos_individual_deptos.value.forEach(element=>{
+        if(element.depto === key){depto.individual+=element.valor}
+      })
+    })
 
     edificio.saldos_favores_actuales =  Object.values(deptos).reduce((acc,value)=>{
         return acc+=value.saldo_favor
@@ -134,9 +156,10 @@ export default function useExpensas(emit){
     Object.values(deptos).map(x=>{
       x.a_pagar = (resultados.deuda_deptos*x.superficie/100)
     })
+
     Object.values(deptos).map(x=>{
       let value = 0
-      value = ((x.a_pagar + x.deuda_depto + cochera.a_pagar_por_cochera)-x.saldo_favor)
+      value = ((x.a_pagar + x.deuda_depto+ x.individual + cochera.a_pagar_por_cochera)-x.saldo_favor)
       if(Math.sign(value) === 0 || Math.sign(value) === 1){
         x.a_pagar_total=value, x.new_saldo_favor=0
       }else if (Math.sign(value) === -0 ||Math.sign(value) === -1){
@@ -150,7 +173,7 @@ export default function useExpensas(emit){
     show_depto_info_extra.value = {}
     // Sacamos la cuenta de cuanto nos tiene que quedar al cerrar cuentas
     const diferencia_entre_pagos_y_deudas_deptos=resultados.suma_pagos_deptos-Object.values(deptos).reduce((acc,value)=>{
-      return acc+=value.deuda_depto
+      return acc+=(value.deuda_depto+value.individual)
     }, 0)
     edificio.saldo_al_cierre =  
     ((edificio.dif_saldo_pretencion_fondo_edificio+edificio.saldo_anterior_fondo_edificio+diferencia_entre_pagos_y_deudas_deptos)-resultados.deuda_total)
@@ -164,16 +187,28 @@ export default function useExpensas(emit){
   const checkNewSaldo = (element) => {
     return element.new_saldo_favor !== 0
   }
+  const checkIndividual = (element) => {
+    return element.individual !== 0
+  }
 
   const selectDepto = (item, index)=>{
     emit('showDeptoSelect', item, index)
+  }
+
+  const getIndividual = (index)=>{
+    const individual = []
+    gastos_individual_deptos.value.forEach(e=>{
+      if (e.depto === index) {individual.push({valor: e.valor, description: e.description})}
+    })
+    return individual
   }
 
   const showDeptoSelect = (item, index) => {
    if(!item){
      show_depto_info_extra.value = {}
    }else{
-     show_depto_info_extra.value = {...item, index: index}
+    let individual = getIndividual(index)
+     show_depto_info_extra.value = {...item, index: index, individual: individual}
    }
   }
 
@@ -206,5 +241,9 @@ export default function useExpensas(emit){
     deleteNewExtraordinaria,
     SendPagoResult,
     setValueMonth,
+    gastos_individual_deptos,
+    createNewGastoIndividualDepto,
+  deleteNewGastoIndividualDepto,
+  checkIndividual,
   }
 }

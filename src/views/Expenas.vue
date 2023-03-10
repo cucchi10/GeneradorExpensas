@@ -9,6 +9,7 @@ import DeptoInfoExtraVue from '../components/DeptoInfoExtra.vue';
 import TableSaldoCierreVue from '../components/TableSaldoCierre.vue';
 import AcordeonComponentVue from '../components/AcordeonComponent.vue';
 import SelectedMonthVue from '../components/SelectMonth.vue';
+import SelectComponentCuotaVue from '../components/SelectComponentCuota.vue';
 
 import {onBeforeMount } from '@vue/runtime-core';
 import {defineEmits} from 'vue';
@@ -18,7 +19,8 @@ const emit = defineEmits(['setLoaderEmit'])
 const {
     gastos_habituales,cochera,otros_pagos,edificio,deptos,expensas_generadas,resultados,createNewPago,deleteNewPago,doGenerateExpensas,
     show_depto_info_extra, showDeptoSelect, valueMonth, otras_extraordinarias, deleteNewExtraordinaria, 
-    createNewExtraordinaria,SendPagoResult,setValueMonth} = useExpensas()
+    createNewExtraordinaria,SendPagoResult,setValueMonth,gastos_individual_deptos,createNewGastoIndividualDepto,
+    deleteNewGastoIndividualDepto,setCuotaCochera} = useExpensas()
 
 const {datos_session, doLocaleStorage, setLocaleStorage, deleteLocaleStorage, refTxt, uploadTxt, downloadTxt,doExportPDF,
 SendPagoStorage,doExportPDFMasive,datos_act_session} = useStrorage(SendPagoResult,showDeptoSelect,emit)
@@ -55,7 +57,11 @@ onBeforeMount(()=>{
         />
         <input-component-vue titleValue="ARBA Cocheras" descriptionValue="$" 
           @onChange="(value)=>cochera.gastos_arba_cocheras=value" :item="cochera.gastos_arba_cocheras"
-        />
+        >
+        <template #innerInput>
+          <select-component-cuota-vue :item="cochera.cuota" @onSelectArbaCuota="(value)=>cochera.cuota=value"/>
+        </template>
+      </input-component-vue>
     </div>
     <div class="">
       <h3 class="text-center">Gastos Habituales</h3>
@@ -75,6 +81,9 @@ onBeforeMount(()=>{
   </div>
     
   <div class="container">
+
+    <!-- Otro Pago -->
+
     <div class="d-flex justify-content-start pb-3">
       <button type="button" class="btn btn-success btn-extra" @click="createNewPago"><font-awesome-icon icon="fa-solid fa-plus" /> Crear Nuevo Campo de Pago</button>
     </div>
@@ -93,6 +102,8 @@ onBeforeMount(()=>{
          Eliminar Ultimo Campo de Pago </button>
     </div>
 
+    <!-- Extraordinarias -->
+
     <div class="d-flex justify-content-start pb-3">
       <button type="button" class="btn btn-success" @click="createNewExtraordinaria"><font-awesome-icon icon="fa-solid fa-plus" /> Crear Nuevo Campo de Extraordinarias</button>
     </div>
@@ -110,6 +121,31 @@ onBeforeMount(()=>{
     <div class="d-flex justify-content-end mt-3 pb-3">
       <button v-if="otras_extraordinarias.length" type="button" class="btn btn-danger" @click="deleteNewExtraordinaria"><font-awesome-icon icon="fa-solid fa-trash"/>
          Eliminar Ultimo Campo de Extraordinarias </button>
+    </div>
+
+    <!-- Gatos Individuales -->
+
+    <div class="d-flex justify-content-start pb-3">
+      <button type="button" class="btn btn-success" @click="createNewGastoIndividualDepto"><font-awesome-icon icon="fa-solid fa-plus" /> Crear Nuevo Campo Individual de Pago</button>
+    </div>
+  
+    <div class="d-flex justify-content-around align-items-center flex-wrap"> 
+      <template v-for="(gasto_individual_depto ,index) in gastos_individual_deptos" :key="index">
+       <input-component-vue :titleValue="`Pago Individual N° ${index+1}`" descriptionValue="$"
+          descriptionValueDobleText="Descripción" :dobleComponentText="true" :item="gasto_individual_depto.valor" 
+          :itemText="gasto_individual_depto.description"
+          :selectComponent="true"
+          :itemDepto="gasto_individual_depto.depto"
+          :array_deptos="Object.keys(deptos)"
+          @onChange="(value)=>gasto_individual_depto.valor=value" @onChangeDobleText="(textValue)=>gasto_individual_depto.description=textValue"
+          @onSelectDepto="(selectValue)=>gasto_individual_depto.depto=selectValue"
+        />
+      </template>
+    </div>
+
+    <div class="d-flex justify-content-end mt-3 pb-3">
+      <button v-if="gastos_individual_deptos.length" type="button" class="btn btn-danger" @click="deleteNewGastoIndividualDepto"><font-awesome-icon icon="fa-solid fa-trash"/>
+         Eliminar Ultimo Campo Individual de Pago </button>
     </div>
   </div>
 

@@ -36,7 +36,7 @@ defineProps({
         </tr>
         <tr v-if="cochera.gastos_arba_cocheras !== 0">
           <th scope="row">ARBA Cocheras</th>
-          <td>{{ `Impuesto Arba sobre cocheras, mes de ${valueMonth}, $  ${cochera.gastos_arba_cocheras.toFixed(2)}` }}</td>
+          <td>{{ `Impuesto Arba sobre cocheras, ${cochera.cuota ? `cuota ${cochera.cuota} de 5` : `mes de ${valueMonth}`}, $  ${cochera.gastos_arba_cocheras.toFixed(2)}` }}</td>
           <td>{{`$ ${cochera.gastos_arba_cocheras.toFixed(2)}`}}</td>
         </tr>
         <tr v-if="gastos_habituales.edenor !==0">
