@@ -49,19 +49,22 @@ onBeforeMount(()=>{
       <h3 class="text-center">Selecciona un Mes</h3>
       <selected-month-vue class="mb-3" @setValueMonth="(value)=>valueMonth=value" :item="valueMonth" :datos_session="datos_session"/>
       <h3 class="text-center">Edificio</h3>
+      <input-component-vue titleValue="Pretención de Caja del Edificio" descriptionValue="$" 
+          @onChange="(value)=>edificio.pretencion_caja=value" :item="edificio.pretencion_caja"
+        />
+        <input-component-vue titleValue="Saldo Anterior Caja" descriptionValue="$" 
+          @onChange="(value)=>edificio.saldo_anterior_caja=value" :item="edificio.saldo_anterior_caja"
+        />
+        <input-component-vue titleValue="Saldo a Favores Totales" descriptionValue="$" 
+          @onChange="(value)=>edificio.saldos_favores_actuales=value" :item="edificio.saldos_favores_actuales"
+        :datos_session="true"/>
         <input-component-vue titleValue="Pretención de Fondo Final del Edificio" descriptionValue="$" 
           @onChange="(value)=>edificio.pretencion_fondo=value" :item="edificio.pretencion_fondo"
         />
         <input-component-vue titleValue="Saldo Anterior Resevera" descriptionValue="$" 
           @onChange="(value)=>edificio.saldo_anterior_fondo_edificio=value" :item="edificio.saldo_anterior_fondo_edificio"
         />
-        <input-component-vue titleValue="ARBA Cocheras" descriptionValue="$" 
-          @onChange="(value)=>cochera.gastos_arba_cocheras=value" :item="cochera.gastos_arba_cocheras"
-        >
-        <template #innerInput>
-          <select-component-cuota-vue :item="cochera.cuota" @onSelectArbaCuota="(value)=>cochera.cuota=value"/>
-        </template>
-      </input-component-vue>
+        
     </div>
     <div class="">
       <h3 class="text-center">Gastos Habituales</h3>
@@ -77,6 +80,13 @@ onBeforeMount(()=>{
         <input-component-vue titleValue="Personal Limpieza" descriptionValue="$" 
           @onChange="(value)=>gastos_habituales.limpieza=value" :item="gastos_habituales.limpieza"
         />
+        <input-component-vue titleValue="ARBA Cocheras" descriptionValue="$" 
+          @onChange="(value)=>cochera.gastos_arba_cocheras=value" :item="cochera.gastos_arba_cocheras"
+        >
+        <template #innerInput>
+          <select-component-cuota-vue :item="cochera.cuota" @onSelectArbaCuota="(value)=>cochera.cuota=value"/>
+        </template>
+      </input-component-vue>
     </div>
   </div>
     
@@ -203,21 +213,18 @@ onBeforeMount(()=>{
         :resultados="resultados"
       />
       <div class="html2pdf__page-break"></div>
-      <table-saldo-cierre-vue descriptionFinal="Saldo al cierre de Caja" :saldoFinal="edificio.saldo_al_cierre"
-        descriptionSaldosFavores="Suma de Saldos a Favores de los Departamentos" 
-        descriptionARecaudar="Saldo a recaudar Por Pagos" descriptionSaldoReserva="Saldo Anterior de Reserva" 
-        descriptionPagos="Pagos a Realizar por Gastos" descriptionExtraordinarias="Detalle por Extraordinarias"
-        :saldoReserva="edificio.saldo_anterior_fondo_edificio" descriptionDeudas="Deudas de Saldos Impagos Deptos"
-        :pagos="(resultados.deuda_total-edificio.dif_saldo_pretencion_fondo_edificio)" :saldoARecaudar="resultados.suma_pagos_deptos"
+      <table-saldo-cierre-vue :saldoCaja="edificio.saldo_anterior_caja" :saldoFinal="edificio.saldo_al_cierre"
+        :saldoReserva="edificio.saldo_anterior_fondo_edificio" :saldoARecaudar="resultados.suma_pagos_deptos"
+        :pagos="(resultados.deuda_total-edificio.dif_saldo_pretencion_fondo_edificio-edificio.dif_saldo_caja)"
         :deudas="Object.values(deptos).reduce((acc,value)=>{
           return acc+=value.deuda_depto}, 0)"
         :extraordinarias="otras_extraordinarias.reduce((acc,value)=>{
-          return acc+=value.otra_extraordinaria}, 0)"
+          return acc+=value.otra_extraordinaria}, 0)+edificio.dif_saldo_caja+edificio.dif_saldo_pretencion_fondo_edificio"
         :saldosFavores="Object.values(deptos).reduce((acc,value)=>{
           return acc+=value.new_saldo_favor}, 0)"
       />
       <depto-info-extra-vue :show_depto_info_extra="show_depto_info_extra" :cochera="cochera" :extraordinarias="otras_extraordinarias.reduce((acc,value)=>{
-        return acc+=value.otra_extraordinaria}, 0)"
+        return acc+=value.otra_extraordinaria}, 0)+edificio.dif_saldo_caja+edificio.dif_saldo_pretencion_fondo_edificio"
       />
     </div>
   </div>

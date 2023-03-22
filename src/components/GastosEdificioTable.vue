@@ -24,13 +24,18 @@ defineProps({
         </tr>
       </thead>
       <tbody>
-        <tr v-if="edificio.pretencion_fondo !== 0 || edificio.saldo_anterior_fondo_edificio !== 0 || edificio.saldos_favores_actuales !==0">
-          <th scope="row">Fondo Reserva</th>
+        <tr v-if="edificio.saldos_favores_actuales !==0 || edificio.dif_saldo_caja !== 0">
+          <th scope="row">Caja - Flujo de dinero efectivo</th>
           <td v-if="edificio.saldos_favores_actuales !==0">
-          {{ `Saldos a Favores de Deptos $ ${edificio.saldos_favores_actuales.toFixed(2)} a Descontar de 
-          Saldo Anterior de Reserva $ ${edificio.saldo_anterior_fondo_edificio.toFixed(2)}. 
-          Fondo Reserva a Recaudar $ ${edificio.pretencion_fondo.toFixed(2)}` }}</td>
-          <td v-else>{{ `Saldo Anterior de Reserva $ ${edificio.saldo_anterior_fondo_edificio.toFixed(2)}.
+          {{ `Saldos a Favores de Deptos $ ${edificio.saldos_favores_actuales.toFixed(2)} a descontar de Caja $ ${edificio.saldo_anterior_caja.toFixed(2)}. 
+          Caja a Recaudar $ ${edificio.pretencion_caja.toFixed(2)}` }}</td>
+          <td v-else>{{ `Saldo Anterior de Caja $ ${edificio.saldo_anterior_caja.toFixed(2)}.
+          Faltante para llegar a $  ${edificio.pretencion_caja.toFixed(2)}` }}</td>
+          <td>{{`$ ${edificio.dif_saldo_caja.toFixed(2)}`}}</td>
+        </tr>
+        <tr v-if="edificio.dif_saldo_pretencion_fondo_edificio !==0">
+          <th scope="row">Fondo Reserva</th>
+          <td>{{ `Saldo Anterior de Reserva $ ${edificio.saldo_anterior_fondo_edificio.toFixed(2)}.
           Faltante para llegar a $  ${edificio.pretencion_fondo.toFixed(2)}` }}</td>
           <td>{{`$ ${edificio.dif_saldo_pretencion_fondo_edificio.toFixed(2)}`}}</td>
         </tr>

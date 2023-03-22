@@ -35,7 +35,8 @@ export default function useStorage(SendPagoResult,showDeptoSelect,emit){
       
       const deuda_depto = [] // aca pusheo el a_pagar
       const saldo_favor = [] // aca pusheo el new_saldo_favor
-      const saldo_anterior_fondo_edificio = edificio.saldo_al_cierre
+      const saldo_anterior_fondo_edificio = edificio.pretencion_fondo
+      const saldo_anterior_caja = edificio.saldo_al_cierre-edificio.pretencion_fondo
       const mesValue = valueMonth
 
       if(mesValue === 'Seleccione un Mes'){
@@ -54,9 +55,15 @@ export default function useStorage(SendPagoResult,showDeptoSelect,emit){
       localStorage.setItem('valueMonth', JSON.stringify(selectLaterMonth))
 
       if (saldo_anterior_fondo_edificio){
-        localStorage.setItem('edificio.saldo_anterior_fondo_edificio', JSON.stringify(edificio.saldo_al_cierre.toFixed(2)))
+        localStorage.setItem('edificio.saldo_anterior_fondo_edificio', JSON.stringify(saldo_anterior_fondo_edificio.toFixed(2)))
       }else{
         localStorage.setItem('edificio.saldo_anterior_fondo_edificio', '0.00')
+      }
+
+      if (saldo_anterior_caja){
+        localStorage.setItem('edificio.saldo_anterior_caja', JSON.stringify(saldo_anterior_caja.toFixed(2)))
+      }else{
+        localStorage.setItem('edificio.saldo_anterior_caja', '0.00')
       }
 
       if(Object.values(deptos)){
@@ -88,6 +95,7 @@ export default function useStorage(SendPagoResult,showDeptoSelect,emit){
 
       const mesValue =  JSON.parse(localStorage.getItem('valueMonth'))
       const saldo_anterior_fondo_edificio = Number(JSON.parse(localStorage.getItem('edificio.saldo_anterior_fondo_edificio')))
+      const saldo_anterior_caja = Number(JSON.parse(localStorage.getItem('edificio.saldo_anterior_caja')))
       const deuda_depto = JSON.parse(localStorage.getItem('deuda_depto'))
       const saldo_favor = JSON.parse(localStorage.getItem('saldo_favor'))
 
@@ -100,6 +108,9 @@ export default function useStorage(SendPagoResult,showDeptoSelect,emit){
       }
       if(saldo_anterior_fondo_edificio){
         edificio.saldo_anterior_fondo_edificio = saldo_anterior_fondo_edificio
+      }
+      if(saldo_anterior_caja){
+        edificio.saldo_anterior_caja = saldo_anterior_caja
       }
       if(Object.values(deptos).length){
         Object.values(deptos).map((x, i)=>{
@@ -159,6 +170,7 @@ export default function useStorage(SendPagoResult,showDeptoSelect,emit){
 
       localStorage.setItem('valueMonth',valores_txt.mesValue)
       localStorage.setItem('edificio.saldo_anterior_fondo_edificio',valores_txt.saldo_anterior_fondo_edificio)
+      localStorage.setItem('edificio.saldo_anterior_caja', valores_txt.saldo_anterior_caja)
       localStorage.setItem('deuda_depto',valores_txt.deuda_depto)
       localStorage.setItem('saldo_favor',valores_txt.saldo_favor)
         
@@ -184,6 +196,7 @@ export default function useStorage(SendPagoResult,showDeptoSelect,emit){
       const data = {}
       data.mesValue =  localStorage.getItem('valueMonth')
       data.saldo_anterior_fondo_edificio =  localStorage.getItem('edificio.saldo_anterior_fondo_edificio')
+      data.saldo_anterior_caja = localStorage.getItem('edificio.saldo_anterior_caja')
       data.deuda_depto =  localStorage.getItem('deuda_depto')
       data.saldo_favor = localStorage.getItem('saldo_favor')
 

@@ -31,9 +31,12 @@ export default function useExpensas(emit){
   // EDIFICIO
 
   const edificio = reactive({
+    pretencion_caja: ref(0),
+    saldo_anterior_caja: ref(0),
     pretencion_fondo: ref(0),
     saldo_anterior_fondo_edificio: ref(0),
     saldo_al_cierre: ref(0),
+    dif_saldo_caja: ref(0),
     dif_saldo_pretencion_fondo_edificio: ref(0),
     saldos_favores_actuales: ref(0),
   })
@@ -77,7 +80,8 @@ export default function useExpensas(emit){
      edificio.saldos_favores_actuales =  Object.values(deptos).reduce((acc,value)=>{
     return acc+=value.saldo_favor
     }, 0)
-    edificio.dif_saldo_pretencion_fondo_edificio =edificio.saldos_favores_actuales+ edi.pretencion_fondo - (edi.saldo_anterior_fondo_edificio)
+    edificio.dif_saldo_pretencion_fondo_edificio = edificio.pretencion_fondo - edificio.saldo_anterior_fondo_edificio
+    edificio.dif_saldo_caja = edificio.pretencion_caja+edificio.saldos_favores_actuales - edificio.saldo_anterior_caja
    }  
     return expensas_generadas.value = false
   })
@@ -119,6 +123,13 @@ export default function useExpensas(emit){
   }
 
   const doGenerateExpensas = () => {
+    const suma_gastos_habituales = Object.values(gastos_habituales).reduce((acc,value)=>{
+      return acc+=value
+    }, 0)
+    const valor_min_caja = edificio.pretencion_caja-(suma_gastos_habituales*1.10)
+    if(valor_min_caja<0){
+      return toaster.error(`Pretencion de caja no supera los gastos habituales + 5%: $ ${(suma_gastos_habituales*1.05).toFixed(2)}`,{position: 'top'})
+    }
 
     if(valueMonth.value === 'Seleccione un Mes') return toaster.error(`Seleccione un mes, por favor`,{position: 'top'})
 
@@ -131,12 +142,11 @@ export default function useExpensas(emit){
 
     edificio.saldos_favores_actuales =  Object.values(deptos).reduce((acc,value)=>{
         return acc+=value.saldo_favor
-        }, 0) 
-    edificio.dif_saldo_pretencion_fondo_edificio =edificio.saldos_favores_actuales+ edificio.pretencion_fondo - (edificio.saldo_anterior_fondo_edificio)
+        }, 0)
+    edificio.dif_saldo_caja =edificio.saldos_favores_actuales+ edificio.pretencion_caja - edificio.saldo_anterior_caja
+    edificio.dif_saldo_pretencion_fondo_edificio =edificio.pretencion_fondo - edificio.saldo_anterior_fondo_edificio
     // Se suma Toda la Deuda total Deptos
-    resultados.deuda_deptos = Object.values(gastos_habituales).reduce((acc,value)=>{
-      return acc+=value
-    }, 0)
+    resultados.deuda_deptos = suma_gastos_habituales
     if(otros_pagos.value.length){
       resultados.deuda_deptos+=otros_pagos.value.reduce((acc,value)=>{
       return acc+=value.otro_pago
@@ -148,6 +158,7 @@ export default function useExpensas(emit){
     }, 0)
     }
     resultados.deuda_deptos+=edificio.dif_saldo_pretencion_fondo_edificio
+    resultados.deuda_deptos+=edificio.dif_saldo_caja
 
     // Se hace la Suma de Deuda Total
     resultados.deuda_total=resultados.deuda_deptos+cochera.gastos_arba_cocheras
@@ -176,9 +187,7 @@ export default function useExpensas(emit){
       return acc+=(value.deuda_depto+value.individual)
     }, 0)
     edificio.saldo_al_cierre =  
-    ((edificio.dif_saldo_pretencion_fondo_edificio+edificio.saldo_anterior_fondo_edificio+diferencia_entre_pagos_y_deudas_deptos)-resultados.deuda_total)
-
-    
+    ((edificio.dif_saldo_caja+edificio.saldo_anterior_caja+edificio.dif_saldo_pretencion_fondo_edificio+edificio.saldo_anterior_fondo_edificio+diferencia_entre_pagos_y_deudas_deptos)-resultados.deuda_total)
 
     setTimeout(()=>{
       expensas_generadas.value = true
