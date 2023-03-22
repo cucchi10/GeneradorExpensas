@@ -215,12 +215,12 @@ onBeforeMount(()=>{
         :deudas="Object.values(deptos).reduce((acc,value)=>{
           return acc+=value.deuda_depto}, 0)"
         :extraordinarias="otras_extraordinarias.reduce((acc,value)=>{
-          return acc+=value.otra_extraordinaria}, 0)"
+          return acc+=value.otra_extraordinaria}, 0)+edificio.dif_saldo_pretencion_fondo_edificio"
         :saldosFavores="Object.values(deptos).reduce((acc,value)=>{
           return acc+=value.new_saldo_favor}, 0)"
       />
       <depto-info-extra-vue :show_depto_info_extra="show_depto_info_extra" :cochera="cochera" :extraordinarias="otras_extraordinarias.reduce((acc,value)=>{
-        return acc+=value.otra_extraordinaria}, 0)"
+        return acc+=value.otra_extraordinaria}, 0)+edificio.dif_saldo_pretencion_fondo_edificio"
       />
     </div>
   </div>
