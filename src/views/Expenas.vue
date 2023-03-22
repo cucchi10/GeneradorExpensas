@@ -55,6 +55,9 @@ onBeforeMount(()=>{
         <input-component-vue titleValue="Saldo Anterior Resevera" descriptionValue="$" 
           @onChange="(value)=>edificio.saldo_anterior_fondo_edificio=value" :item="edificio.saldo_anterior_fondo_edificio"
         />
+        <input-component-vue titleValue="Saldo a Favores Totales" descriptionValue="$" 
+          @onChange="(value)=>edificio.saldos_favores_actuales=value" :item="edificio.saldos_favores_actuales"
+        :datos_session="true"/>
         <input-component-vue titleValue="ARBA Cocheras" descriptionValue="$" 
           @onChange="(value)=>cochera.gastos_arba_cocheras=value" :item="cochera.gastos_arba_cocheras"
         >

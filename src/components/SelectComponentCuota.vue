@@ -21,7 +21,7 @@ defineProps({
   options:{
     type: Array,
     default() {
-      return ['1', '2', '3', '4', '5']
+      return ['1', '2', '3', '4', '5', '1 al 5', '2 al 5','3 al 5','4 al 5']
     }
   }
 })
