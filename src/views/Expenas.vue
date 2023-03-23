@@ -26,7 +26,7 @@ const {
 const {datos_session, doLocaleStorage, setLocaleStorage, deleteLocaleStorage, refTxt, uploadTxt, downloadTxt,
 SendPagoStorage,datos_act_session} = useStrorage(SendPagoResult,showDeptoSelect,emit)
 
-const {doExportPDF, doExportPDFMasive,doExportXSLX} = useExport(showDeptoSelect,emit)
+const {doExportPDF, doExportPDFMasive,doExportXSLX,uploadExcel,refExcel} = useExport(showDeptoSelect,emit)
 
 onBeforeMount(()=>{
   setLocaleStorage(deptos, edificio, setValueMonth)
@@ -61,13 +61,6 @@ onBeforeMount(()=>{
         <input-component-vue titleValue="Saldo a Favores Totales" descriptionValue="$" 
           @onChange="(value)=>edificio.saldos_favores_actuales=value" :item="edificio.saldos_favores_actuales"
         :datos_session="true"/>
-        <input-component-vue titleValue="ARBA Cocheras" descriptionValue="$" 
-          @onChange="(value)=>cochera.gastos_arba_cocheras=value" :item="cochera.gastos_arba_cocheras"
-        >
-        <template #innerInput>
-          <select-component-cuota-vue :item="cochera.cuota" @onSelectArbaCuota="(value)=>cochera.cuota=value"/>
-        </template>
-      </input-component-vue>
     </div>
     <div class="">
       <h3 class="text-center">Gastos Habituales</h3>
@@ -83,6 +76,13 @@ onBeforeMount(()=>{
         <input-component-vue titleValue="Personal Limpieza" descriptionValue="$" 
           @onChange="(value)=>gastos_habituales.limpieza=value" :item="gastos_habituales.limpieza"
         />
+        <input-component-vue titleValue="ARBA Cocheras" descriptionValue="$" 
+            @onChange="(value)=>cochera.gastos_arba_cocheras=value" :item="cochera.gastos_arba_cocheras"
+          >
+          <template #innerInput>
+            <select-component-cuota-vue :item="cochera.cuota" @onSelectArbaCuota="(value)=>cochera.cuota=value"/>
+          </template>
+        </input-component-vue>
     </div>
   </div>
     
@@ -170,16 +170,16 @@ onBeforeMount(()=>{
   <div class="container mt-5">
     <div class="d-flex justify-content-between flex-wrap align-items-center">
       <div class="d-flex flex-column justify-content-center align-items-start mb-3 gap-3">
-        <button v-if="expensas_generadas" type="button" class="btn btn-info" @click="doExportPDFMasive(valueMonth,deptos)" :disabled="!expensas_generadas">
-        <font-awesome-icon icon="fa-solid fa-file-pdf" /> Export All PDF</button>
+        <label v-if="expensas_generadas" type="button" class="btn btn-outline-warning" ><font-awesome-icon icon="fa-solid fa-folder-open"/>
+         Subir Archivo EXCEL<input type="file" ref="refExcel" @change="uploadExcel(valueMonth)" hidden></label>
       <button v-if="expensas_generadas" type="button" class="btn btn-warning" @click="doExportXSLX(valueMonth)" :disabled="!expensas_generadas">
         <font-awesome-icon icon="fa-solid fa-file-excel" /> Export EXCEL</button>
-        <label v-if="!datos_session" type="button" class="btn btn-outline-primary" ><font-awesome-icon icon="fa-solid fa-folder-open"/>
+    </div>
+    <div class="d-flex flex-column justify-content-center align-items-end mb-3 gap-3">
+      <label v-if="!datos_session" type="button" class="btn btn-outline-primary" ><font-awesome-icon icon="fa-solid fa-folder-open"/>
          Subir Archivo de Session<input type="file" ref="refTxt" @change="uploadTxt(deptos, edificio, setValueMonth)" hidden></label>
         <button v-if="datos_session&&datos_act_session" type="button" class="btn btn-outline-primary" @click="downloadTxt(valueMonth)"><font-awesome-icon icon="fa-solid fa-download" />
          Guardar Archivo de Session </button>
-    </div>
-    <div class="d-flex flex-column justify-content-center align-items-end mb-3 gap-3">
       <button v-if="expensas_generadas" type="button" class="btn btn-outline-primary" @click="doLocaleStorage(deptos, edificio, valueMonth)"><font-awesome-icon icon="fa-solid fa-floppy-disk" />
          Guardar Datos En Session </button>
       <button v-if="datos_session" type="button" class="btn btn-outline-primary" @click="deleteLocaleStorage"><font-awesome-icon icon="fa-solid fa-trash"/>
@@ -187,9 +187,11 @@ onBeforeMount(()=>{
     </div>
     </div>
     <div class="d-flex justify-content-around flex-wrap mb-5 gap-3">
-      <button type="button" class="btn btn-primary" @click="doGenerateExpensas"><font-awesome-icon icon="fa-solid fa-calculator" /> Calcular Expensas</button>
+      <button type="button" class="btn btn-info" @click="doGenerateExpensas"><font-awesome-icon icon="fa-solid fa-calculator" /> Calcular Expensas</button>
       <button type="button" class="btn btn-primary" @click="doExportPDF(show_depto_info_extra, valueMonth)" :disabled="!expensas_generadas">
         <font-awesome-icon icon="fa-solid fa-file-pdf" /> Exportar PDF</button>
+      <button type="button" class="btn btn-primary" @click="doExportPDFMasive(valueMonth,deptos)" :disabled="!expensas_generadas">
+        <font-awesome-icon icon="fa-solid fa-file-pdf" /> Export All PDF</button>
     </div>
     <div v-if="expensas_generadas" id="ExpensasPDF" ref="ExpensasPDF">
       <h2 v-if="valueMonth === 'Enero' && new Date().getMonth() === 11" class="text-center mb-5 class-title-pdf" id="TittlePdf">{{ `Expensas Correspondientes al Mes de ${valueMonth} del ${ mes = (new Date().getFullYear()+1)}` }}</h2>

@@ -3,6 +3,7 @@ import XLSX from 'xlsx';
 import html2pdf from 'html2pdf.js';
 
 import { createToaster } from "@meforma/vue-toaster";
+import { ref } from 'vue';
 const toaster = createToaster();
 
 
@@ -105,6 +106,44 @@ export default function useStorage(showDeptoSelect, emit) {
     }
   }
 
+  const refExcel = ref(null)
+  let Excel;
+
+  const uploadExcel = async (month) => {
+    try {
+      setLoaderEmit(true)
+      if (month === 'Seleccione un Mes') {
+        return toaster.error('Selecciona un Mes', { position: 'top' }), setLoaderEmit(false);
+      }
+      if (month === 'Enero') {
+        return toaster.error('Mejor cree un nuevo Archivo para cada año', { position: 'top' }), setLoaderEmit(false);
+      }
+
+      const archive_excel = refExcel.value.files[0]
+      if (!archive_excel) { return toaster.error(`Error Al Cargar el Archivo`, { position: 'top-left' }), setLoaderEmit(false); }
+
+
+      const reader = new FileReader();
+      const readExcel = await new Promise((resolve) => {
+        reader.onload = () => {
+          let bytes = new Uint8Array(reader.result);
+          resolve(bytes);
+        }
+        reader.readAsArrayBuffer(archive_excel);
+      })
+      if (!readExcel.length) { return toaster.error(`Error Al Leer el Archivo`, { position: 'top-left' }), setLoaderEmit(false); }
+
+      Excel = XLSX.read(readExcel);
+
+      toaster.success(`Excel Leido Correctamente`)
+      setLoaderEmit(false)
+    } catch (error) {
+      setLoaderEmit(false)
+      console.log(error)
+      toaster.error(`Error Al Cargar Excel - ${error}`, { position: 'top-right' })
+    }
+  }
+
   const create_gap_rows = (ws, nrows) => {
     var ref = XLSX.utils.decode_range(ws["!ref"]);
     ref.e.r += nrows;
@@ -131,23 +170,31 @@ export default function useStorage(showDeptoSelect, emit) {
       const headers = ["Gastos", "Deptos", "Detalles"];
 
       const worksheet = XLSX.utils.aoa_to_sheet([[headers[0]]]);
-      XLSX.utils.sheet_add_dom(worksheet, gastos, { origin: -1 });
       worksheet["!ref"] = create_gap_rows(worksheet, 1)
+      XLSX.utils.sheet_add_dom(worksheet, gastos, { origin: -1 });
+      worksheet["!ref"] = create_gap_rows(worksheet, 3)
       XLSX.utils.sheet_add_aoa(worksheet, [[headers[1]]], { origin: -1 });
+      worksheet["!ref"] = create_gap_rows(worksheet, 1)
       XLSX.utils.sheet_add_dom(worksheet, deptos, { origin: -1 });
-      worksheet["!ref"] = create_gap_rows(worksheet, 2)
+      worksheet["!ref"] = create_gap_rows(worksheet, 3)
       XLSX.utils.sheet_add_aoa(worksheet, [[headers[2]]], { origin: -1 });
+      worksheet["!ref"] = create_gap_rows(worksheet, 1)
       XLSX.utils.sheet_add_dom(worksheet, detalles, { origin: -1 });
 
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, `Expensas ${month} ${Year}`);
+      const workbook = Excel ? Excel : XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, `${month} ${Year}`);
 
-      XLSX.writeFile(workbook, `Expensas_${month}_${Year}.xlsx`);
+      if (month === 'Enero') {
+        XLSX.writeFile(workbook, `Expensas_${month}_${Year}.xlsx`);
+      } else {
+        XLSX.writeFile(workbook, `Expensas_Enero_a_${month}_${Year}.xlsx`);
+      }
+
       setLoaderEmit(false)
     } catch (error) {
       setLoaderEmit(false)
       console.log(error)
-      toaster.error(`Error Al Generar PDF - ${error}`, { position: 'top-right' })
+      toaster.error(`Error Al Generar Excel - ${error}`, { position: 'top-right' })
     }
   }
 
@@ -156,5 +203,7 @@ export default function useStorage(showDeptoSelect, emit) {
     doExportPDF,
     doExportPDFMasive,
     doExportXSLX,
+    uploadExcel,
+    refExcel
   }
 }
