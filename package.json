@@ -21,7 +21,8 @@
     "html2pdf.js": "^0.9.0",
     "stylus": "^0.59.0",
     "stylus-loader": "^3.0.2",
-    "vue": "^3.2.45"
+    "vue": "^3.2.45",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.2/xlsx-0.19.2.tgz"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.0.0",

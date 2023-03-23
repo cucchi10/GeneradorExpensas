@@ -1,6 +1,7 @@
 <script setup>
 import useExpensas from '../composable/useExpensas.js';
 import useStrorage from '../composable/useStorage.js';
+import useExport from '../composable/useExport.js';
 
 import InputComponentVue from "../components/InputComponent.vue";
 import GastosEdificioTableVue from "../components/GastosEdificioTable.vue";
@@ -22,8 +23,10 @@ const {
     createNewExtraordinaria,SendPagoResult,setValueMonth,gastos_individual_deptos,createNewGastoIndividualDepto,
     deleteNewGastoIndividualDepto,setCuotaCochera} = useExpensas()
 
-const {datos_session, doLocaleStorage, setLocaleStorage, deleteLocaleStorage, refTxt, uploadTxt, downloadTxt,doExportPDF,
-SendPagoStorage,doExportPDFMasive,datos_act_session} = useStrorage(SendPagoResult,showDeptoSelect,emit)
+const {datos_session, doLocaleStorage, setLocaleStorage, deleteLocaleStorage, refTxt, uploadTxt, downloadTxt,
+SendPagoStorage,datos_act_session} = useStrorage(SendPagoResult,showDeptoSelect,emit)
+
+const {doExportPDF, doExportPDFMasive,doExportXSLX} = useExport(showDeptoSelect,emit)
 
 onBeforeMount(()=>{
   setLocaleStorage(deptos, edificio, setValueMonth)
@@ -169,9 +172,11 @@ onBeforeMount(()=>{
       <div class="d-flex flex-column justify-content-center align-items-start mb-3 gap-3">
         <button v-if="expensas_generadas" type="button" class="btn btn-info" @click="doExportPDFMasive(valueMonth,deptos)" :disabled="!expensas_generadas">
         <font-awesome-icon icon="fa-solid fa-file-pdf" /> Export All PDF</button>
-      <label v-if="!datos_session" type="button" class="btn btn-outline-primary" ><font-awesome-icon icon="fa-solid fa-folder-open"/>
+      <button v-if="expensas_generadas" type="button" class="btn btn-warning" @click="doExportXSLX(valueMonth)" :disabled="!expensas_generadas">
+        <font-awesome-icon icon="fa-solid fa-file-excel" /> Export EXCEL</button>
+        <label v-if="!datos_session" type="button" class="btn btn-outline-primary" ><font-awesome-icon icon="fa-solid fa-folder-open"/>
          Subir Archivo de Session<input type="file" ref="refTxt" @change="uploadTxt(deptos, edificio, setValueMonth)" hidden></label>
-      <button v-if="datos_session&&datos_act_session" type="button" class="btn btn-outline-primary" @click="downloadTxt(valueMonth)"><font-awesome-icon icon="fa-solid fa-download" />
+        <button v-if="datos_session&&datos_act_session" type="button" class="btn btn-outline-primary" @click="downloadTxt(valueMonth)"><font-awesome-icon icon="fa-solid fa-download" />
          Guardar Archivo de Session </button>
     </div>
     <div class="d-flex flex-column justify-content-center align-items-end mb-3 gap-3">

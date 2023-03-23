@@ -13,7 +13,7 @@ const {checkNewSaldo, selectDepto,checkIndividual} = useExpensas(emit)
 <template>
   <div class="form-check position-relative">
   <div class="table table-responsive ">
-    <table class="table table-striped table-bordered">
+    <table class="table table-striped table-bordered" id="PlanillaDeptos" ref="PlanillaDeptos">
       <caption>Calculo de pago para Deptos</caption>
       <thead>
         <tr class="table-headers">

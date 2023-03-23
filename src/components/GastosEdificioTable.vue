@@ -14,7 +14,7 @@ defineProps({
 
 <template>
   <div class="table table-responsive ">
-    <table class="table table-striped table-bordered">
+    <table class="table table-striped table-bordered" id="PlanillaGastos" ref="PlanillaGastos">
       <caption>Gastos del Edificio</caption>
       <thead>
         <tr class="table-headers">
