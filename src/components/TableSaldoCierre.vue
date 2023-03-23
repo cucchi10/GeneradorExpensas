@@ -1,6 +1,6 @@
 <template>
   <div class="table table-responsive ">
-    <table class="table table-striped table-bordered">
+    <table class="table table-striped table-bordered" id="PlanillaDetalles" ref="PlanillaDetalles">
       <caption>Detalles Sobre Movimientos</caption>
     <thead>
       <tr class="table-headers">
