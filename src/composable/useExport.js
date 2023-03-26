@@ -9,6 +9,9 @@ const toaster = createToaster();
 
 export default function useStorage(showDeptoSelect, emit) {
 
+  const refExcel = ref(null)
+  let Excel;
+
   const setLoaderEmit = (value) => {
     emit('setLoaderEmit', value)
   }
@@ -106,9 +109,6 @@ export default function useStorage(showDeptoSelect, emit) {
     }
   }
 
-  const refExcel = ref(null)
-  let Excel;
-
   const uploadExcel = async (month) => {
     try {
       setLoaderEmit(true)
@@ -139,7 +139,6 @@ export default function useStorage(showDeptoSelect, emit) {
       setLoaderEmit(false)
     } catch (error) {
       setLoaderEmit(false)
-      console.log(error)
       toaster.error(`Error Al Cargar Excel - ${error}`, { position: 'top-right' })
     }
   }
@@ -193,7 +192,6 @@ export default function useStorage(showDeptoSelect, emit) {
       setLoaderEmit(false)
     } catch (error) {
       setLoaderEmit(false)
-      console.log(error)
       toaster.error(`Error Al Generar Excel - ${error}`, { position: 'top-right' })
     }
   }

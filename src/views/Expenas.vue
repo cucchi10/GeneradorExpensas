@@ -3,6 +3,7 @@ import useExpensas from '../composable/useExpensas.js';
 import useStrorage from '../composable/useStorage.js';
 import useExport from '../composable/useExport.js';
 
+import InputChechedVue from '../components/InputChecked.vue'
 import InputComponentVue from "../components/InputComponent.vue";
 import GastosEdificioTableVue from "../components/GastosEdificioTable.vue";
 import GastosDepartamentoTableVue from '../components/GastosDepartamentoTable.vue';
@@ -21,10 +22,10 @@ const {
     gastos_habituales,cochera,otros_pagos,edificio,deptos,expensas_generadas,resultados,createNewPago,deleteNewPago,doGenerateExpensas,
     show_depto_info_extra, showDeptoSelect, valueMonth, otras_extraordinarias, deleteNewExtraordinaria, 
     createNewExtraordinaria,SendPagoResult,setValueMonth,gastos_individual_deptos,createNewGastoIndividualDepto,
-    deleteNewGastoIndividualDepto,setCuotaCochera} = useExpensas()
+    deleteNewGastoIndividualDepto} = useExpensas()
 
 const {datos_session, doLocaleStorage, setLocaleStorage, deleteLocaleStorage, refTxt, uploadTxt, downloadTxt,
-SendPagoStorage,datos_act_session} = useStrorage(SendPagoResult,showDeptoSelect,emit)
+SendPagoStorage,datos_act_session,uploadTxtPagos} = useStrorage(SendPagoResult,emit)
 
 const {doExportPDF, doExportPDFMasive,doExportXSLX,uploadExcel,refExcel} = useExport(showDeptoSelect,emit)
 
@@ -39,15 +40,26 @@ onBeforeMount(()=>{
      <AcordeonComponentVue title="Pagos Realizados Por Departamentos" idAccordion="PagosDeptos" idHeading="PagosDeptosHeading" 
       idCollapse="PagosDeptosCollapse">
       <template #inner>
-        <template v v-for="depto, index in Object.keys(deptos)" :key="index">
-          <input-component-vue :titleValue="`Depto N° ${depto.replace('_',' ')}`" descriptionValue="Pago $"
-          @onChange="(value)=>SendPagoStorage(value,depto,index, deptos)"
-          />
+        <template v v-for="depto, index in deptos" :key="index">
+          <input-component-vue :titleValue="`Depto N° ${index.replace('_',' ')}`" descriptionValue="Pago $"
+            :item="depto.pago"
+            @onChange="(value)=>SendPagoStorage(value,index, deptos)"
+            >
+            <template #innerInput>
+              <input-cheched-vue titleValue="Pago" :checked="depto.pagado" :index="index"/>
+            </template>
+          </input-component-vue>
         </template>
       </template>
      </AcordeonComponentVue>
+     <div class="d-flex flex-wrap justify-content-around align-items-stretch mt-3 gap-3">
+      <label type="button" class="btn btn-outline-primary" ><font-awesome-icon icon="fa-solid fa-folder-open"/>
+         Subir Archivo de Pagos<input type="file" ref="refTxt" @change="uploadTxtPagos(deptos)" hidden></label>
+        <button type="button" class="btn btn-outline-primary" @click="downloadTxt(valueMonth,deptos)"><font-awesome-icon icon="fa-solid fa-download" />
+         Descargar Archivo de Pagos </button>
+    </div>
   </div>
-  <div class="d-flex justify-content-around align-items-center flex-wrap pt-5 pb-2">
+  <div class="d-flex justify-content-around align-items-stretch flex-wrap pt-5 pb-2">
     <div class="">
       <h3 class="text-center">Selecciona un Mes</h3>
       <selected-month-vue class="mb-3" @setValueMonth="(value)=>valueMonth=value" :item="valueMonth" :datos_session="datos_session"/>
@@ -94,7 +106,7 @@ onBeforeMount(()=>{
       <button type="button" class="btn btn-success btn-extra" @click="createNewPago"><font-awesome-icon icon="fa-solid fa-plus" /> Crear Nuevo Campo de Pago</button>
     </div>
   
-    <div class="d-flex justify-content-around align-items-center flex-wrap"> 
+    <div class="d-flex justify-content-around align-items-stretch flex-wrap"> 
       <template v-for="(otro_pago ,index) in otros_pagos" :key="index">
         <input-component-vue :titleValue="`Otro Pago N° ${index+1}`" descriptionValue="$" 
           descriptionValueDobleText="Descripción" :dobleComponentText="true" :item="otro_pago.otro_pago" :itemText="otro_pago.description"
@@ -114,7 +126,7 @@ onBeforeMount(()=>{
       <button type="button" class="btn btn-success" @click="createNewExtraordinaria"><font-awesome-icon icon="fa-solid fa-plus" /> Crear Nuevo Campo de Extraordinarias</button>
     </div>
   
-    <div class="d-flex justify-content-around align-items-center flex-wrap"> 
+    <div class="d-flex justify-content-around align-items-stretch flex-wrap"> 
       <template v-for="(otra_extraordinaria ,index) in otras_extraordinarias" :key="index">
         <input-component-vue :titleValue="`Extraordinaria N° ${index+1}`" descriptionValue="$"
           descriptionValueDobleText="Descripción" :dobleComponentText="true" :item="otra_extraordinaria.otra_extraordinaria" 
@@ -135,7 +147,7 @@ onBeforeMount(()=>{
       <button type="button" class="btn btn-success" @click="createNewGastoIndividualDepto"><font-awesome-icon icon="fa-solid fa-plus" /> Crear Nuevo Campo Individual de Pago</button>
     </div>
   
-    <div class="d-flex justify-content-around align-items-center flex-wrap"> 
+    <div class="d-flex justify-content-around align-items-stretch flex-wrap"> 
       <template v-for="(gasto_individual_depto ,index) in gastos_individual_deptos" :key="index">
        <input-component-vue :titleValue="`Pago Individual N° ${index+1}`" descriptionValue="$"
           descriptionValueDobleText="Descripción" :dobleComponentText="true" :item="gasto_individual_depto.valor" 
@@ -168,18 +180,18 @@ onBeforeMount(()=>{
   </AcordeonComponentVue>
 
   <div class="container mt-5">
-    <div class="d-flex justify-content-between flex-wrap align-items-center">
-      <div class="d-flex flex-column justify-content-center align-items-start mb-3 gap-3">
+    <div class="d-flex justify-content-between flex-wrap align-items-stretch">
+      <div class="d-flex flex-column justify-content-center align-items-stretch mb-3 gap-3">
         <label v-if="expensas_generadas" type="button" class="btn btn-outline-warning" ><font-awesome-icon icon="fa-solid fa-folder-open"/>
          Subir Archivo EXCEL<input type="file" ref="refExcel" @change="uploadExcel(valueMonth)" hidden></label>
       <button v-if="expensas_generadas" type="button" class="btn btn-warning" @click="doExportXSLX(valueMonth)" :disabled="!expensas_generadas">
         <font-awesome-icon icon="fa-solid fa-file-excel" /> Export EXCEL</button>
     </div>
-    <div class="d-flex flex-column justify-content-center align-items-end mb-3 gap-3">
+    <div class="d-flex flex-column justify-content-center align-items-stretch mb-3 gap-3">
       <label v-if="!datos_session" type="button" class="btn btn-outline-primary" ><font-awesome-icon icon="fa-solid fa-folder-open"/>
          Subir Archivo de Session<input type="file" ref="refTxt" @change="uploadTxt(deptos, edificio, setValueMonth)" hidden></label>
         <button v-if="datos_session&&datos_act_session" type="button" class="btn btn-outline-primary" @click="downloadTxt(valueMonth)"><font-awesome-icon icon="fa-solid fa-download" />
-         Guardar Archivo de Session </button>
+         Descargar Archivo de Session </button>
       <button v-if="expensas_generadas" type="button" class="btn btn-outline-primary" @click="doLocaleStorage(deptos, edificio, valueMonth)"><font-awesome-icon icon="fa-solid fa-floppy-disk" />
          Guardar Datos En Session </button>
       <button v-if="datos_session" type="button" class="btn btn-outline-primary" @click="deleteLocaleStorage"><font-awesome-icon icon="fa-solid fa-trash"/>

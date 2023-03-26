@@ -11,7 +11,10 @@ const toaster = createToaster();
 
 const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre']
 
-export default function useStorage(SendPagoResult, showDeptoSelect, emit) {
+export default function useStorage(SendPagoResult, emit) {
+
+  const deuda_depto = [] // aca pusheo el a_pagar
+  const saldo_favor = [] // aca pusheo el new_saldo_favor
 
   const refTxt = ref(null)
 
@@ -34,8 +37,6 @@ export default function useStorage(SendPagoResult, showDeptoSelect, emit) {
     try {
       setLoaderEmit(true)
 
-      const deuda_depto = [] // aca pusheo el a_pagar
-      const saldo_favor = [] // aca pusheo el new_saldo_favor
       const saldo_anterior_fondo_edificio = edificio.saldo_al_cierre
       const mesValue = valueMonth
 
@@ -178,17 +179,32 @@ export default function useStorage(SendPagoResult, showDeptoSelect, emit) {
     }
   }
 
-  const downloadTxt = (valueMonth) => {
+  const downloadTxt = (valueMonth, deptos) => {
     try {
       setLoaderEmit(true)
-      const Year = new Date().getFullYear()
+      let Year;
+      if (valueMonth === 'Enero' && new Date().getMonth() === 11) {
+        Year = new Date().getFullYear() + 1
+      } else {
+        Year = new Date().getFullYear()
+      }
+
+      let text = `Data_Session_Expensas_${valueMonth}_${Year}.txt`
       const data = {}
       data.mesValue = localStorage.getItem('valueMonth')
       data.saldo_anterior_fondo_edificio = localStorage.getItem('edificio.saldo_anterior_fondo_edificio')
       data.deuda_depto = localStorage.getItem('deuda_depto')
       data.saldo_favor = localStorage.getItem('saldo_favor')
 
-      const file = new File([JSON.stringify(data)], `Data_Session_Expensas_${valueMonth}_${Year}.txt`, { type: "text/plain" });
+      if (deptos) {
+        data.deptos = {};
+        Object.entries(deptos).forEach(([key, value]) =>
+          data.deptos[key] = value.pago
+        );
+        text = `Data_Pagos_Expensas_${valueMonth}_${Year}.txt`
+      }
+
+      const file = new File([JSON.stringify(data)], text, { type: "text/plain" });
 
       saveAs(file);
       setLoaderEmit(false)
@@ -203,11 +219,45 @@ export default function useStorage(SendPagoResult, showDeptoSelect, emit) {
 
   }
 
-  const deuda_depto = []
-  const saldo_favor = []
-  const SendPagoStorage = (value, depto, index, deptos) => {
+  const uploadTxtPagos = async (deptos) => {
     try {
+      setLoaderEmit(true)
+      let archive_txt = refTxt.value.files[0]
+      if (!archive_txt) { return toaster.error(`Error Al Cargar el Archivo`, { position: 'top-left' }), setLoaderEmit(false); }
 
+      const reader = new FileReader();
+      archive_txt_result.value = await new Promise((resolve) => {
+
+        reader.onload = () => {
+          resolve(reader.result);
+        }
+        reader.readAsText(archive_txt);
+      })
+      if (!archive_txt_result.value) { return toaster.error(`Error Al Leer el Archivo`, { position: 'top-left' }), setLoaderEmit(false); }
+
+      const deptos_txt = JSON.parse(archive_txt_result.value).deptos
+
+      if (!deptos_txt) {
+        return toaster.error(`No Hay Datos de Pagos de deptos`, { position: 'top-right' }), setLoaderEmit(false);
+      }
+
+      Object.entries(deptos_txt).forEach(([key, value]) =>
+        SendPagoStorage(value, key, deptos)
+      );
+
+      setLoaderEmit(false)
+    } catch (error) {
+      setLoaderEmit(false)
+      toaster.error(`Error Al Cargar Archivo de Pagos - ${error}`, { position: 'top-right' })
+      setTimeout(() => {
+        deleteLocaleStorage()
+        return location.reload()
+      }, 700)
+    }
+  }
+
+  const SendPagoStorage = (value, indexdepto, deptos) => {
+    try {
       if (!deuda_depto.length) {
         JSON.parse(localStorage?.getItem('deuda_depto')).forEach(d => deuda_depto.push(Number(d)))
       }
@@ -218,18 +268,25 @@ export default function useStorage(SendPagoResult, showDeptoSelect, emit) {
       let deuda_depto_value = 0
       let saldo_favor_value = 0
 
+      let DeptosArray = Object.keys(deptos)
+      let index = DeptosArray.findIndex(key => key === indexdepto)
+
+      if (index === -1) {
+        return toaster.error(`Error en Index de Depto`, { position: 'top-right' });
+      }
+
       let valor = 0
       valor = Number((deuda_depto[index] - value).toFixed(2))
 
       if (Math.sign(valor) === 0 || Math.sign(valor) === 1) {
         deuda_depto_value = valor, saldo_favor_value = saldo_favor[index]
-        return SendPagoResult({ deuda_depto_value, saldo_favor_value, index: depto, deptos })
+        return SendPagoResult({ deuda_depto_value, saldo_favor_value, index: indexdepto, deptos, pago: value })
 
       } else if (Math.sign(valor) === -0 || Math.sign(valor) === -1) {
         deuda_depto_value = 0, saldo_favor_value = (saldo_favor[index] + (valor * -1))
-        return SendPagoResult({ deuda_depto_value, saldo_favor_value, index: depto, deptos })
+        return SendPagoResult({ deuda_depto_value, saldo_favor_value, index: indexdepto, deptos, pago: value })
       }
-      return toaster.error(`Error Al Cargar Pagos de ${depto.replace('_', ' ')}`, { position: 'top-right' });
+      return toaster.error(`Error Al Cargar Pagos de ${indexdepto.replace('_', ' ')}`, { position: 'top-right' });
     } catch (error) {
       toaster.error(`Error Al Cargar Pagos - ${error}`, { position: 'top-right' });
       setTimeout(() => {
@@ -253,5 +310,49 @@ export default function useStorage(SendPagoResult, showDeptoSelect, emit) {
     setLoader,
     setLoaderEmit,
     datos_act_session,
+    SendPagoStorage,
+    uploadTxtPagos,
   }
 }
+
+
+
+
+
+
+
+
+
+// const SendPagoStorage = (value, depto, index, deptos) => {
+//   try {
+
+//     if (!deuda_depto.length) {
+//       JSON.parse(localStorage?.getItem('deuda_depto')).forEach(d => deuda_depto.push(Number(d)))
+//     }
+//     if (!saldo_favor.length) {
+//       JSON.parse(localStorage?.getItem('saldo_favor')).forEach(s => saldo_favor.push(Number(s)))
+//     }
+
+//     let deuda_depto_value = 0
+//     let saldo_favor_value = 0
+
+//     let valor = 0
+//     valor = Number((deuda_depto[index] - value).toFixed(2))
+
+//     if (Math.sign(valor) === 0 || Math.sign(valor) === 1) {
+//       deuda_depto_value = valor, saldo_favor_value = saldo_favor[index]
+//       return SendPagoResult({ deuda_depto_value, saldo_favor_value, index: depto, deptos })
+
+//     } else if (Math.sign(valor) === -0 || Math.sign(valor) === -1) {
+//       deuda_depto_value = 0, saldo_favor_value = (saldo_favor[index] + (valor * -1))
+//       return SendPagoResult({ deuda_depto_value, saldo_favor_value, index: depto, deptos })
+//     }
+//     return toaster.error(`Error Al Cargar Pagos de ${depto.replace('_', ' ')}`, { position: 'top-right' });
+//   } catch (error) {
+//     toaster.error(`Error Al Cargar Pagos - ${error}`, { position: 'top-right' });
+//     setTimeout(() => {
+//       deleteLocaleStorage()
+//       return location.reload()
+//     }, 700)
+//   }
+// }
