@@ -22,7 +22,7 @@ const {
     gastos_habituales,cochera,otros_pagos,edificio,deptos,expensas_generadas,resultados,createNewPago,deleteNewPago,doGenerateExpensas,
     show_depto_info_extra, showDeptoSelect, valueMonth, otras_extraordinarias, deleteNewExtraordinaria, 
     createNewExtraordinaria,SendPagoResult,setValueMonth,gastos_individual_deptos,createNewGastoIndividualDepto,
-    deleteNewGastoIndividualDepto} = useExpensas()
+    deleteNewGastoIndividualDepto,createNewPagoCochera,deleteNewPagoCochera} = useExpensas()
 
 const {datos_session, doLocaleStorage, setLocaleStorage, deleteLocaleStorage, refTxt, uploadTxt, downloadTxt,
 SendPagoStorage,datos_act_session,uploadTxtPagos} = useStrorage(SendPagoResult,emit)
@@ -140,6 +140,27 @@ onBeforeMount(()=>{
       <button v-if="otras_extraordinarias.length" type="button" class="btn btn-danger" @click="deleteNewExtraordinaria"><font-awesome-icon icon="fa-solid fa-trash"/>
          Eliminar Ultimo Campo de Extraordinarias </button>
     </div>
+
+    <!-- Otro Pago Cocheras -->
+
+    <div class="d-flex justify-content-start pb-3">
+      <button type="button" class="btn btn-success btn-extra" @click="createNewPagoCochera"><font-awesome-icon icon="fa-solid fa-plus" /> Crear Nuevo Campo de Pago Cochera</button>
+    </div>
+  
+    <div class="d-flex justify-content-around align-items-stretch flex-wrap"> 
+      <template v-for="(gastoCochera ,index) in cochera.push" :key="index">
+        <input-component-vue :titleValue="`Gasto Cochera N° ${index+1}`" descriptionValue="$" 
+          descriptionValueDobleText="Descripción" :dobleComponentText="true" :item="gastoCochera.gasto" :itemText="gastoCochera.description"
+          @onChange="(value)=>gastoCochera.gasto=value" @onChangeDobleText="(textValue)=>gastoCochera.description=textValue"
+        />
+      </template>
+    </div>
+
+    <div class="d-flex justify-content-end mt-3 pb-3">
+      <button v-if="cochera.push.length" type="button" class="btn btn-danger btn-extra-del" @click="deleteNewPagoCochera"><font-awesome-icon icon="fa-solid fa-trash"/>
+         Eliminar Ultimo Campo de Pago Cochera</button>
+    </div>
+
 
     <!-- Gatos Individuales -->
 

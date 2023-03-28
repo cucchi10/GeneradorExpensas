@@ -73,6 +73,13 @@ defineProps({
             <td>{{`$ ${otra_extraordinaria.otra_extraordinaria.toFixed(2)}`}}</td>
           </template>
         </tr>
+         <tr v-for="(gastoCochera ,index) in cochera.push" :key="index">
+          <template v-if="gastoCochera.gasto !==0">
+            <th scope="row">{{`Gasto Cochera N° ${index+1}`}}</th>
+            <td>{{ gastoCochera?.description || `Gasto Cochera N° ${index+1}`}}</td>
+            <td>{{`$ ${gastoCochera.gasto.toFixed(2)}`}}</td>
+          </template>
+        </tr>
         <tr class="table-results">
           <th scope="row">Total</th>
           <td></td>

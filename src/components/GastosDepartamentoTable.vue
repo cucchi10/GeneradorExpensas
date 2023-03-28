@@ -23,8 +23,8 @@ const {checkNewSaldo, selectDepto,checkIndividual} = useExpensas(emit)
           <th v-if="Object.values(deptos).some(checkIndividual)" scope="col">Gasto Individual</th>
           <th scope="col">Superficie Depto</th>
           <th scope="col">A Pagar Depto</th>
-          <th v-if="cochera.gastos_arba_cocheras !==0" scope="col">Superficie Cochera</th>
-          <th v-if="cochera.gastos_arba_cocheras !==0" scope="col">A Pagar Cochera</th>
+          <th v-if="cochera.a_pagar_por_cochera !==0" scope="col">Superficie Cochera</th>
+          <th v-if="cochera.a_pagar_por_cochera !==0" scope="col">A Pagar Cochera</th>
           <th v-if="Object.values(deptos).some(checkNewSaldo)" scope="col">Nuevo Saldo a Favor</th>
           <th scope="col">Total a Pagar</th>
         </tr>
@@ -39,8 +39,8 @@ const {checkNewSaldo, selectDepto,checkIndividual} = useExpensas(emit)
           <td v-if="Object.values(deptos).some(checkIndividual)">{{ `$ ${depto.individual}` }}</td>
           <td>{{ `Superficie ${depto.superficie} %` }}</td>
           <td>{{`$ ${depto.a_pagar.toFixed(2)}`}}</td>
-          <td v-if="cochera.gastos_arba_cocheras !==0">{{ `Superficie ${cochera.superficie.toFixed(2)} %` }}</td>
-          <td v-if="cochera.gastos_arba_cocheras !==0">{{`$ ${cochera.a_pagar_por_cochera.toFixed(2)}`}}</td>
+          <td v-if="cochera.a_pagar_por_cochera !==0">{{ `Superficie ${cochera.superficie.toFixed(2)} %` }}</td>
+          <td v-if="cochera.a_pagar_por_cochera !==0">{{`$ ${cochera.a_pagar_por_cochera.toFixed(2)}`}}</td>
           <td v-if="Object.values(deptos).some(checkNewSaldo)">{{ `$ ${depto.new_saldo_favor.toFixed(2)}` }}</td>
           <td>{{`$ ${depto.a_pagar_total.toFixed(2)}`}}</td>
         </tr>
@@ -55,8 +55,10 @@ const {checkNewSaldo, selectDepto,checkIndividual} = useExpensas(emit)
           return acc+=value.individual}, 0).toFixed(2)}` }}</td>
           <td>{{ `Superficie ${resultados.superficie_deptos} %` }}</td>
           <td>{{ `$ ${resultados.deuda_deptos.toFixed(2)}` }}</td>
-          <td v-if="cochera.gastos_arba_cocheras !==0">{{`Superficie ${resultados.superficie_cochera} %`}}</td>
-          <td v-if="cochera.gastos_arba_cocheras !==0">{{ `$ ${cochera.gastos_arba_cocheras.toFixed(2)}` }}</td>
+          <td v-if="cochera.a_pagar_por_cochera !==0">{{`Superficie ${resultados.superficie_cochera} %`}}</td>
+          <td v-if="cochera.a_pagar_por_cochera !==0">{{ `$ ${(cochera.gastos_arba_cocheras+ cochera.push.reduce((acc, value) => {
+          return acc += value.gasto
+        }, 0)).toFixed(2)}` }}</td>
           <td v-if="Object.values(deptos).some(checkNewSaldo)">{{ `$ ${Object.values(deptos).reduce((acc,value)=>{
           return acc+=value.new_saldo_favor}, 0).toFixed(2)}` }}</td>
           <th>{{`$ ${resultados.suma_pagos_deptos.toFixed(2)}`}}</th>

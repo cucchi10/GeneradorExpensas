@@ -15,7 +15,7 @@
               <th scope="row">Superficie Depto</th>
               <td>{{ `${show_depto_info_extra.superficie} %` }}</td>
             </tr>
-            <tr v-if="Object.values(cochera).length && cochera?.gastos_arba_cocheras !==0">
+            <tr>
               <th scope="row">Superficie Cochera</th>
               <td>{{ `${cochera.superficie.toFixed(2)} %` }}</td>
             </tr>
@@ -43,7 +43,7 @@
               <th scope="row">{{ `A Pagar por ${show_depto_info_extra.superficie} % de Superficie Departamento` }}</th>
               <td>{{`$ ${show_depto_info_extra.a_pagar.toFixed(2)}`}}</td>
             </tr>
-            <tr v-if="Object.values(cochera).length && cochera?.gastos_arba_cocheras !==0">
+            <tr v-if="Object.values(cochera).length">
               <th scope="row">{{ `A Pagar por ${cochera.superficie.toFixed(2)} % de Superficie Cochera` }}</th>
               <td>{{`$ ${cochera.a_pagar_por_cochera.toFixed(2)}`}}</td>
             </tr>

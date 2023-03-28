@@ -21,7 +21,8 @@ export default function useExpensas(emit) {
     superficie: 11.11111111111111,
     gastos_arba_cocheras: ref(0),
     a_pagar_por_cochera: ref(0),
-    cuota: ref()
+    cuota: ref(),
+    push: ref([])
   })
 
   const otros_pagos = ref([])
@@ -71,18 +72,31 @@ export default function useExpensas(emit) {
   watch([gastos_habituales, cochera, edificio, otros_pagos.value, deptos, otras_extraordinarias.value, valueMonth, gastos_individual_deptos.value],
     ([gasto_habitual, coch, edi, otro_pago, depto, otra_extraordinaria, mes, gastos_ind_depto]) => {
       if (coch) {
-        cochera.a_pagar_por_cochera = coch.gastos_arba_cocheras * cochera.superficie / 100
+        cochera.a_pagar_por_cochera = (cochera.gastos_arba_cocheras + cochera.push.reduce((acc, value) => {
+          return acc += value.gasto
+        }, 0)) * cochera.superficie / 100
       }
       if (edi) {
         edificio.saldos_favores_actuales = Object.values(deptos).reduce((acc, value) => {
           return acc += value.saldo_favor
         }, 0)
-        edificio.dif_saldo_pretencion_fondo_edificio = edificio.saldos_favores_actuales + edi.pretencion_fondo - (edi.saldo_anterior_fondo_edificio)
+        edificio.dif_saldo_pretencion_fondo_edificio = edificio.saldos_favores_actuales + edificio.pretencion_fondo - (edificio.saldo_anterior_fondo_edificio)
       }
       return expensas_generadas.value = false
     })
 
   // Function
+
+  const createNewPagoCochera = () => {
+    let initial_value = 0
+    let initial_text = ''
+    return cochera.push.push({ gasto: initial_value, description: initial_text })
+  }
+  const deleteNewPagoCochera = () => {
+    if (cochera.push.length) {
+      return cochera.push.pop()
+    }
+  }
 
   const createNewExtraordinaria = () => {
     let initial_value = 0
@@ -150,12 +164,18 @@ export default function useExpensas(emit) {
     resultados.deuda_deptos += edificio.dif_saldo_pretencion_fondo_edificio
 
     // Se hace la Suma de Deuda Total
-    resultados.deuda_total = resultados.deuda_deptos + cochera.gastos_arba_cocheras
+    resultados.deuda_total = resultados.deuda_deptos + cochera.gastos_arba_cocheras + cochera.push.reduce((acc, value) => {
+      return acc += value.gasto
+    }, 0)
 
     // Se crea cuenta para Deptos
     Object.values(deptos).map(x => {
       x.a_pagar = (resultados.deuda_deptos * x.superficie / 100)
     })
+
+    cochera.a_pagar_por_cochera = (cochera.gastos_arba_cocheras + cochera.push.reduce((acc, value) => {
+      return acc += value.gasto
+    }, 0)) * cochera.superficie / 100
 
     Object.values(deptos).map(x => {
       let value = 0
@@ -250,5 +270,7 @@ export default function useExpensas(emit) {
     createNewGastoIndividualDepto,
     deleteNewGastoIndividualDepto,
     checkIndividual,
+    createNewPagoCochera,
+    deleteNewPagoCochera,
   }
 }
