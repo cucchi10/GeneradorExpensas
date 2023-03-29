@@ -80,7 +80,7 @@ export default function useExpensas(emit) {
         edificio.saldos_favores_actuales = Object.values(deptos).reduce((acc, value) => {
           return acc += value.saldo_favor
         }, 0)
-        edificio.dif_saldo_pretencion_fondo_edificio = edificio.pretencion_fondo - (edificio.saldo_anterior_fondo_edificio)
+        edificio.dif_saldo_pretencion_fondo_edificio = edificio.pretencion_fondo - edificio.saldo_anterior_fondo_edificio
       }
       return expensas_generadas.value = false
     })
@@ -146,7 +146,7 @@ export default function useExpensas(emit) {
     edificio.saldos_favores_actuales = Object.values(deptos).reduce((acc, value) => {
       return acc += value.saldo_favor
     }, 0)
-    edificio.dif_saldo_pretencion_fondo_edificio = edificio.pretencion_fondo - (edificio.saldo_anterior_fondo_edificio)
+    edificio.dif_saldo_pretencion_fondo_edificio = edificio.pretencion_fondo - edificio.saldo_anterior_fondo_edificio
     // Se suma Toda la Deuda total Deptos
     resultados.deuda_deptos = Object.values(gastos_habituales).reduce((acc, value) => {
       return acc += value
@@ -196,9 +196,7 @@ export default function useExpensas(emit) {
       return acc += (value.deuda_depto + value.individual)
     }, 0)
     edificio.saldo_al_cierre =
-      ((edificio.dif_saldo_pretencion_fondo_edificio + edificio.saldo_anterior_fondo_edificio + diferencia_entre_pagos_y_deudas_deptos) - resultados.deuda_total)
-
-
+      ((edificio.saldos_favores_actuales + edificio.dif_saldo_pretencion_fondo_edificio + edificio.saldo_anterior_fondo_edificio + diferencia_entre_pagos_y_deudas_deptos) - resultados.deuda_total)
 
     setTimeout(() => {
       expensas_generadas.value = true

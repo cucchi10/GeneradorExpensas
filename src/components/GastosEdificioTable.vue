@@ -29,13 +29,6 @@ defineProps({
           <td>{{ `Saldo Anterior de Reserva $ ${edificio.saldo_anterior_fondo_edificio.toFixed(2)}.
           Faltante para llegar a $  ${edificio.pretencion_fondo.toFixed(2)}` }}</td>
           <td>{{`$ ${edificio.dif_saldo_pretencion_fondo_edificio.toFixed(2)}`}}</td>
-          <!-- <td v-if="edificio.saldos_favores_actuales !==0">
-          {{ `Saldos a Favores de Deptos $ ${edificio.saldos_favores_actuales.toFixed(2)} a descontar de 
-          Saldo Anterior de Reserva $ ${edificio.saldo_anterior_fondo_edificio.toFixed(2)}. 
-          Fondo Reserva a Recaudar $ ${edificio.pretencion_fondo.toFixed(2)}` }}</td>
-          <td v-else>{{ `Saldo Anterior de Reserva $ ${edificio.saldo_anterior_fondo_edificio.toFixed(2)}.
-          Faltante para llegar a $  ${edificio.pretencion_fondo.toFixed(2)}` }}</td>
-          <td>{{`$ ${edificio.dif_saldo_pretencion_fondo_edificio.toFixed(2)}`}}</td> -->
         </tr>
         <tr v-if="cochera.gastos_arba_cocheras !== 0">
           <th scope="row">ARBA Cocheras</th>

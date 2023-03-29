@@ -37,7 +37,7 @@ export default function useStorage(SendPagoResult, emit) {
     try {
       setLoaderEmit(true)
 
-      const saldo_anterior_fondo_edificio = edificio.saldo_al_cierre
+      const saldo_anterior_fondo_edificio = edificio.pretencion_fondo
       const mesValue = valueMonth
 
       if (mesValue === 'Seleccione un Mes') {
@@ -56,7 +56,7 @@ export default function useStorage(SendPagoResult, emit) {
       localStorage.setItem('valueMonth', JSON.stringify(selectLaterMonth))
 
       if (saldo_anterior_fondo_edificio) {
-        localStorage.setItem('edificio.saldo_anterior_fondo_edificio', JSON.stringify(edificio.saldo_al_cierre.toFixed(2)))
+        localStorage.setItem('edificio.saldo_anterior_fondo_edificio', JSON.stringify(saldo_anterior_fondo_edificio.toFixed(2)))
       } else {
         localStorage.setItem('edificio.saldo_anterior_fondo_edificio', '0.00')
       }

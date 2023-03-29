@@ -246,11 +246,8 @@ onBeforeMount(()=>{
         :resultados="resultados"
       />
       <div class="html2pdf__page-break"></div>
-      <table-saldo-cierre-vue descriptionFinal="Saldo al cierre de Caja" :saldoFinal="edificio.saldo_al_cierre"
-        descriptionSaldosFavores="Suma de Saldos a Favores de los Departamentos" 
-        descriptionARecaudar="Saldo a recaudar Por Pagos" descriptionSaldoReserva="Saldo Anterior de Reserva" 
-        descriptionPagos="Pagos a Realizar por Gastos" descriptionExtraordinarias="Detalle por Extraordinarias"
-        :saldoReserva="edificio.saldo_anterior_fondo_edificio" descriptionDeudas="Deudas de Saldos Impagos Deptos"
+      <table-saldo-cierre-vue :saldoFinal="edificio.saldo_al_cierre"
+        :saldoReserva="edificio.saldo_anterior_fondo_edificio"
         :pagos="(resultados.deuda_total-edificio.dif_saldo_pretencion_fondo_edificio)" :saldoARecaudar="resultados.suma_pagos_deptos"
         :deudas="Object.values(deptos).reduce((acc,value)=>{
           return acc+=value.deuda_depto}, 0)"
