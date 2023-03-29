@@ -182,11 +182,11 @@ export default function useStorage(SendPagoResult, emit) {
   const downloadTxt = (valueMonth, deptos) => {
     try {
       setLoaderEmit(true)
-      let Year;
-      if (valueMonth === 'Enero' && new Date().getMonth() === 11) {
-        Year = new Date().getFullYear() + 1
-      } else {
-        Year = new Date().getFullYear()
+      let Year = new Date().getFullYear()
+      if (month === 'Enero' && new Date().getMonth() === 11) {
+        Year++
+      } else if (month === 'Diciembre' && new Date().getMonth() === 0) {
+        Year--
       }
 
       let text = `Data_Session_Expensas_${valueMonth}_${Year}.txt`

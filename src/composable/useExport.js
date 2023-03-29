@@ -22,11 +22,11 @@ export default function useStorage(showDeptoSelect, emit) {
       if (month === 'Seleccione un Mes') {
         return toaster.error('Selecciona un Mes', { position: 'top' }), setLoaderEmit(false);
       }
-      let Year;
+      let Year = new Date().getFullYear()
       if (month === 'Enero' && new Date().getMonth() === 11) {
-        Year = new Date().getFullYear() + 1
-      } else {
-        Year = new Date().getFullYear()
+        Year++
+      } else if (month === 'Diciembre' && new Date().getMonth() === 0) {
+        Year--
       }
 
       let element = document.getElementById('ExpensasPDF');
@@ -70,11 +70,11 @@ export default function useStorage(showDeptoSelect, emit) {
   const doExportPDF = (item, month) => {
     try {
       setLoaderEmit(true)
-      let Year
+      let Year = new Date().getFullYear()
       if (month === 'Enero' && new Date().getMonth() === 11) {
-        Year = new Date().getFullYear() + 1
-      } else {
-        Year = new Date().getFullYear()
+        Year++
+      } else if (month === 'Diciembre' && new Date().getMonth() === 0) {
+        Year--
       }
       if (!Object.values(item).length) {
         return toaster.error('Selecciona un Departamento en la Tabla', { position: 'bottom' }), setLoaderEmit(false);
@@ -153,12 +153,14 @@ export default function useStorage(showDeptoSelect, emit) {
     try {
       setLoaderEmit(true)
       showDeptoSelect(null)
-      let Year
+
+      let Year = new Date().getFullYear()
       if (month === 'Enero' && new Date().getMonth() === 11) {
-        Year = new Date().getFullYear() + 1
-      } else {
-        Year = new Date().getFullYear()
+        Year++
+      } else if (month === 'Diciembre' && new Date().getMonth() === 0) {
+        Year--
       }
+
       if (month === 'Seleccione un Mes') {
         return toaster.error('Selecciona un Mes', { position: 'top' }), setLoaderEmit(false);
       }
