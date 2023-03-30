@@ -183,9 +183,9 @@ export default function useStorage(SendPagoResult, emit) {
     try {
       setLoaderEmit(true)
       let Year = new Date().getFullYear()
-      if (month === 'Enero' && new Date().getMonth() === 11) {
+      if (valueMonth === 'Enero' && new Date().getMonth() === 11) {
         Year++
-      } else if (month === 'Diciembre' && new Date().getMonth() === 0) {
+      } else if (valueMonth === 'Diciembre' && new Date().getMonth() === 0) {
         Year--
       }
 
