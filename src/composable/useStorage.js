@@ -1,7 +1,5 @@
 
 import { ref } from "@vue/reactivity";
-import XLSX from 'xlsx';
-import html2pdf from 'html2pdf.js';
 import { saveAs } from 'file-saver';
 
 import { createToaster } from "@meforma/vue-toaster";
@@ -36,6 +34,9 @@ export default function useStorage(SendPagoResult, emit) {
   const doLocaleStorage = (deptos, edificio, valueMonth) => {
     try {
       setLoaderEmit(true)
+      // Borramos los arrays para no duplicar datos!
+      deuda_depto.length = 0
+      saldo_favor.length = 0
 
       const saldo_anterior_fondo_edificio = edificio.pretencion_fondo
       const mesValue = valueMonth
@@ -63,8 +64,8 @@ export default function useStorage(SendPagoResult, emit) {
 
       if (Object.values(deptos)) {
         Object.values(deptos).forEach(x => {
-          if (x.a_pagar_total) { deuda_depto.push(x.a_pagar_total.toFixed(2)) } else { deuda_depto.push('0.00') }
-          if (x.new_saldo_favor) { saldo_favor.push(x.new_saldo_favor.toFixed(2)) } else { saldo_favor.push('0.00') }
+          x.a_pagar_total > 0 ? deuda_depto.push(x.a_pagar_total.toFixed(2)) : deuda_depto.push('0.00')
+          x.new_saldo_favor > 0 ? saldo_favor.push(x.new_saldo_favor.toFixed(2)) : saldo_favor.push('0.00')
         })
         localStorage.setItem('deuda_depto', JSON.stringify(deuda_depto))
         localStorage.setItem('saldo_favor', JSON.stringify(saldo_favor))
